@@ -37,7 +37,6 @@
 
 .menu li a:hover,
 .menu li a.active {
-  /* background-color: #383838; */
   color: #18cf00;
   border-bottom: solid 5px #18cf00;
   transition: 0.2s ease;
@@ -68,6 +67,8 @@ input[type="checkbox"] {
     text-align: center;
     padding: 16px 0;
     margin: 0;
+    z-index: 10;
+    transition: 1s;
   }
 
   .menu li:hover {
@@ -81,9 +82,22 @@ input[type="checkbox"] {
 
   input[type="checkbox"]:checked ~ .menu {
     display: block;
+    animation: checkbox-checked 0.3s;
   }
 
   .hamburger {
     display: block;
+  }
+}
+
+@keyframes checkbox-checked {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
   }
 }

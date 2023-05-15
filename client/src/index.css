@@ -31,3 +31,49 @@
 body {
   margin: 0;
 }
+
+.place-form {
+  position: flex;
+  list-style: none;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 90%;
+  max-width: 40rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 6px;
+  background: rgb(54, 54, 54);
+  transition: 0.3s;
+}
+
+.place-form.entering {
+  transform: scale(0.98);
+}
+
+.place-form.entered {
+  transform: scale(1);
+}
+
+.place-form.exiting {
+  transform: scale(0.98);
+}
+
+.place-form.exited {
+  transform: scale(1);
+  background: rgb(43, 42, 42);
+}
+
+.authentication__header {
+  color: white;
+  text-align: center;
+}
+
+.authentication {
+  width: 90%;
+  max-width: 25rem;
+  margin: 7rem auto;
+  text-align: center;
+}
+
+.authentication form {
+  margin-bottom: 1rem;
+}
