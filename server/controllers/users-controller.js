@@ -2,10 +2,23 @@ import User from "../models/User.js";
 
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
+import Jwt from "jsonwebtoken";
+import Role from "../models/Role.js";
+
+const generateAccessToken = (id, email, roles) => {
+  try {
+    const payload = { id, email, roles };
+    return Jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "1h" });
+  } catch (err) {
+    console.log(err);
+    // throw new Error("Error");
+  }
+};
 
 class UserController {
   async getUsers(req, res, next) {
     try {
+      // const users = await User.find({}, "-password");
       const users = await User.find();
       res.status(200).json(users);
     } catch (err) {
@@ -39,8 +52,10 @@ class UserController {
     }
 
     let hashedPassword;
+    let userRole;
     try {
       hashedPassword = await bcrypt.hash(password, 10);
+      userRole = await Role.findOne({ value: "USER" });
     } catch (err) {
       return res
         .status(500)
@@ -51,6 +66,7 @@ class UserController {
       username,
       email,
       password: hashedPassword,
+      roles: [userRole.value],
     });
 
     try {
@@ -61,11 +77,14 @@ class UserController {
         .json({ message: "Signing up failed, please try again later", err });
     }
 
+    const token = generateAccessToken(newUser.id, newUser.email, newUser.roles);
+
     res.status(201).json({
       userId: newUser.id,
       username: newUser.username,
       email: newUser.email,
       password: newUser.password,
+      token: token,
     });
   }
 
@@ -104,10 +123,17 @@ class UserController {
       });
     }
 
+    const token = generateAccessToken(
+      existingUser.id,
+      existingUser.email,
+      existingUser.roles
+    );
+
     res.json({
       userId: existingUser.id,
       username: existingUser.username,
       email: existingUser.email,
+      token: token,
     });
   }
 }

@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 4 },
-  // role USER, ADMIN
+  roles: [{ type: String, ref: "Role" }],
   // avatarImage: { type: String, required: true },
   // posts, ref Post
   // comments
