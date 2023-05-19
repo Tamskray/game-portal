@@ -6,12 +6,14 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 
 import usersRoutes from "./routes/users-routes.js";
+import postsRoutes from "./routes/posts-routes.js";
 
 const app = express();
 
 app.use(bodyParser.json());
 
 app.use("/api/users", usersRoutes);
+app.use("/api/posts", postsRoutes);
 
 mongoose
   .connect(

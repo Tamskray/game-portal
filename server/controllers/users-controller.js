@@ -20,7 +20,13 @@ class UserController {
     try {
       // const users = await User.find({}, "-password");
       const users = await User.find();
-      res.status(200).json(users);
+
+      // just check
+      const formattedUsers = users.map(({ id, username }) => {
+        return { id, username };
+      });
+
+      res.status(200).json(formattedUsers);
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
@@ -129,7 +135,7 @@ class UserController {
       existingUser.roles
     );
 
-    res.json({
+    res.status(201).json({
       userId: existingUser.id,
       username: existingUser.username,
       email: existingUser.email,
