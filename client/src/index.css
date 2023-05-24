@@ -77,3 +77,15 @@ body {
 .authentication form {
   margin-bottom: 1rem;
 }
+
+.post {
+  text-align: left;
+  margin: 2rem;
+}
+
+.center {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,21 @@
+.user__comment textarea {
+  height: 30px;
+  transition: 0.3s ease;
+  resize: none;
+}
+
+.user__comment textarea:focus {
+  height: 150px;
+}
+
+.user__comment textarea:not(:empty) {
+  min-height: 150px;
+}
+
+.comment__center {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

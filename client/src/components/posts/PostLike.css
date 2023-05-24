@@ -1,0 +1,17 @@
+.like__item {
+  margin-bottom: 20px;
+}
+
+.like__icon {
+  font-size: 30px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.like__color {
+  color: red;
+}
+
+.like__icon:hover {
+  transform: scale(1.2);
+}

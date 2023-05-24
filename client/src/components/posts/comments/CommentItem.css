@@ -1,0 +1,10 @@
+.comment__item {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+  margin-top: 10px;
+  border-radius: 3px;
+  padding: 1rem;
+  background: rgb(54, 54, 54);
+}

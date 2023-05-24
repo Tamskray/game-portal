@@ -1,9 +1,12 @@
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import "./NavLinks.css";
+import { AuthContext } from "../../context/auth-context";
 
 const NavLinks = ({ cl }) => {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -21,15 +24,31 @@ const NavLinks = ({ cl }) => {
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         className={`${cl.menu} menu ${isMenuOpen && "open"}`}
       >
-        <li>
-          <NavLink to="/uitest">UI-test</NavLink>
-        </li>
+        {auth.isLoggedIn && (
+          <li>
+            <NavLink to="/uitest">UI-test</NavLink>
+          </li>
+        )}
         <li>
           <NavLink to="/posts">Пости</NavLink>
         </li>
-        <li>
-          <NavLink to="/login">Увійти</NavLink>
-        </li>
+        {!auth.isLoggedIn && (
+          <li>
+            <NavLink to="/login">Увійти</NavLink>
+          </li>
+        )}
+        {auth.isLoggedIn && (
+          <li>
+            <button
+              onClick={() => {
+                auth.logout();
+                // navigate("/");
+              }}
+            >
+              Вийти
+            </button>
+          </li>
+        )}
       </div>
     </ul>
   );

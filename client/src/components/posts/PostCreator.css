@@ -1,0 +1,21 @@
+.creator__image {
+  width: 4rem;
+  height: 4rem;
+  margin-right: 1rem;
+}
+
+.creator__name {
+  position: relative;
+  width: 40rem;
+  bottom: 45px;
+  left: 80px;
+}
+
+@media (max-width: 768px) {
+  .creator__name {
+    position: relative;
+    width: 23rem;
+    bottom: 57px;
+    left: 80px;
+  }
+}

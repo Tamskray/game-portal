@@ -13,6 +13,26 @@ class PostController {
     }
   }
 
+  async getPostById(req, res, next) {
+    const postId = req.params.pid;
+    let post;
+    try {
+      post = await Post.findById(postId);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong, could not find a post" });
+    }
+
+    if (!post) {
+      return res
+        .status(404)
+        .json({ message: "Could not find post for provided id" });
+    }
+
+    res.json(post);
+  }
+
   async createPost(req, res, next) {
     // express validation results
     // ---------
@@ -27,7 +47,7 @@ class PostController {
       creator,
       //   creator: req.userData.userId,
       comments: [],
-      likes: 0,
+      likes: {},
       date: Date.now(),
     });
 
@@ -56,6 +76,48 @@ class PostController {
     }
 
     res.status(201).json(newPost);
+  }
+
+  async updatePostLike(req, res, next) {
+    const postId = req.params.pid;
+    const { userId } = req.body;
+
+    let post;
+    try {
+      post = await Post.findById(postId);
+
+      if (!post) {
+        return res
+          .status(404)
+          .json({ message: "Could not find post for this id" });
+      }
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong, could not find a post" });
+    }
+
+    const isLiked = post.likes.get(userId);
+
+    if (isLiked) {
+      post.likes.delete(userId);
+    } else {
+      post.likes.set(userId, true);
+    }
+
+    try {
+      await Post.findByIdAndUpdate(postId, { likes: post.likes });
+    } catch (err) {
+      return res.status(500).json({
+        message: "Updating post likes failed, please try again later",
+        err,
+      });
+    }
+
+    // update post info for json output
+    post = await Post.findById(postId);
+
+    res.status(200).json({ likes: post.likes });
   }
 
   async deletePost(req, res, next) {

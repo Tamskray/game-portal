@@ -36,6 +36,7 @@ const Input = ({
   id,
   onInput,
   validators,
+  withoutErrors,
 }) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: initialValue || "",
@@ -77,11 +78,21 @@ const Input = ({
       <textarea
         id={id}
         rows={row || 3}
+        placeholder={placeholder}
         onChange={changeHandler}
         onBlur={touchHandler}
         value={inputState.value}
       />
     );
+
+  if (withoutErrors) {
+    return (
+      <div className={`form-control`}>
+        <label htmlFor={id}>{label}</label>
+        {inputElement}
+      </div>
+    );
+  }
 
   return (
     <div

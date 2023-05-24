@@ -7,10 +7,13 @@ import { checkAuth } from "../middleware/check-auth.js";
 const router = new Router();
 
 router.get("/", PostController.getPosts);
+router.get("/:pid", PostController.getPostById);
 
 router.use(checkAuth);
 
 router.post("/", PostController.createPost);
+
+router.patch("/:pid/like", PostController.updatePostLike);
 
 router.delete("/:pid", PostController.deletePost);
 

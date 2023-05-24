@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "../hooks/form-hook";
 import {
   VALIDATOR_REQUIRE,
@@ -10,9 +10,16 @@ import Input from "../components/UI/input/Input";
 import Button from "../components/UI/Button/Button";
 
 import { Transition } from "react-transition-group";
+import { AuthContext } from "../context/auth-context";
+import { useNavigate } from "react-router-dom";
+import { useHttpClient } from "../hooks/http-hook";
 
 const LoginPage = () => {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const [isLoginMode, setIsLoginMode] = useState(true);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
   const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
@@ -57,9 +64,59 @@ const LoginPage = () => {
     setIsLoginMode((prevMode) => !prevMode);
   };
 
-  const loginSubmitHandler = (event) => {
+  const loginSubmitHandler = async (event) => {
     event.preventDefault();
+
     console.log(formState);
+
+    if (isLoginMode) {
+      try {
+        const responseData = await sendRequest(
+          "http://localhost:5000/api/users/login",
+          "POST",
+          JSON.stringify({
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          }),
+          { "Content-Type": "application/json" }
+        );
+
+        // console.log(responseData);
+
+        auth.login(responseData.userId, responseData.token, responseData.role);
+        navigate("/");
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        // using formData instead of JSON.stringify
+        // it also already includes headers
+        const formData = new FormData();
+        formData.append("username", formState.inputs.username.value);
+        formData.append("email", formState.inputs.email.value);
+        formData.append("password", formState.inputs.password.value);
+        // formData.append("image", formState.inputs.image.value);
+        const responseData = await sendRequest(
+          "http://localhost:5000/api/users/signup",
+          "POST",
+          JSON.stringify({
+            username: formState.inputs.username.value,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          }),
+          {
+            "Content-Type": "application/json",
+          }
+          // formData
+        );
+
+        auth.login(responseData.userId, responseData.token, responseData.role);
+        navigate("/");
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   return (

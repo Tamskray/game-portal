@@ -5,9 +5,9 @@ import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
 import Role from "../models/Role.js";
 
-const generateAccessToken = (id, email, roles) => {
+const generateAccessToken = (userId, email, roles) => {
   try {
-    const payload = { id, email, roles };
+    const payload = { userId, email, roles };
     return Jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "1h" });
   } catch (err) {
     console.log(err);
@@ -27,6 +27,17 @@ class UserController {
       });
 
       res.status(200).json(formattedUsers);
+    } catch (err) {
+      res.status(404).json({ message: err.message });
+    }
+  }
+
+  async getUserById(req, res, next) {
+    try {
+      const userId = req.params.uid;
+      const user = await User.findById(userId);
+
+      res.status(200).json({ username: user.username, posts: user.posts });
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
@@ -84,6 +95,18 @@ class UserController {
     }
 
     const token = generateAccessToken(newUser.id, newUser.email, newUser.roles);
+    // let token;
+    // try {
+    //   token = Jwt.sign(
+    //     { userId: newUser.id, email: newUser.email, role: newUser.roles },
+    //     process.env.JWT_KEY,
+    //     { expiresIn: "1h" }
+    //   );
+    // } catch (err) {
+    //   return res
+    //     .status(500)
+    //     .json({ message: "Signing up failed, please try again later", err });
+    // }
 
     res.status(201).json({
       userId: newUser.id,
@@ -91,6 +114,7 @@ class UserController {
       email: newUser.email,
       password: newUser.password,
       token: token,
+      role: newUser.roles[0],
     });
   }
 
@@ -140,6 +164,7 @@ class UserController {
       username: existingUser.username,
       email: existingUser.email,
       token: token,
+      role: existingUser.roles[0],
     });
   }
 }

@@ -5,7 +5,14 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 4 },
   roles: [{ type: String, ref: "Role" }],
-  posts: [{ type: mongoose.Types.ObjectId, required: false, ref: "Post" }],
+  posts: [
+    {
+      type: mongoose.Types.ObjectId,
+      required: false,
+      default: [],
+      ref: "Post",
+    },
+  ],
   // avatarImage: { type: String, required: true },
   // posts, ref Post
   // comments
