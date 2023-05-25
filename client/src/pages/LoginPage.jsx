@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "../hooks/form-hook";
 import {
   VALIDATOR_REQUIRE,
@@ -11,12 +11,15 @@ import Button from "../components/UI/Button/Button";
 
 import { Transition } from "react-transition-group";
 import { AuthContext } from "../context/auth-context";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useHttpClient } from "../hooks/http-hook";
 
 const LoginPage = () => {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const doesAnyHistoryEntryExist = location.key !== "default";
+
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -84,7 +87,8 @@ const LoginPage = () => {
         // console.log(responseData);
 
         auth.login(responseData.userId, responseData.token, responseData.role);
-        navigate("/");
+
+        doesAnyHistoryEntryExist ? navigate(-1) : navigate("/");
       } catch (err) {
         console.log(err);
       }
@@ -112,7 +116,8 @@ const LoginPage = () => {
         );
 
         auth.login(responseData.userId, responseData.token, responseData.role);
-        navigate("/");
+
+        doesAnyHistoryEntryExist ? navigate(-1) : navigate("/");
       } catch (err) {
         console.log(err);
       }

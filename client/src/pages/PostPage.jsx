@@ -27,7 +27,7 @@ const PostPage = () => {
     fetchPost();
   }, [sendRequest, params.postId]);
 
-  console.log(loadedPost);
+  // console.log(loadedPost);
 
   return (
     <>

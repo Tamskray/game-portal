@@ -9,9 +9,18 @@
 }
 
 .like__color {
-  color: red;
+  color: rgb(248, 25, 25);
 }
 
 .like__icon:hover {
   transform: scale(1.2);
+}
+
+.like__modal__content {
+  margin: 10px;
+  font-size: 22px;
+}
+
+.like__modal__actions {
+  margin: 5px;
 }

@@ -1,10 +1,44 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useHttpClient } from "../../../hooks/http-hook";
 import moment from "moment";
+import { RiDeleteBin7Fill } from "react-icons/ri";
 // moment().format();
 
 import "./CommentItem.css";
+import Avatar from "../../UI/avatar/Avatar";
+import { AuthContext } from "../../../context/auth-context";
 
-const CommentItem = ({ content, creatorId, date }) => {
+const CommentItem = ({
+  commentId,
+  content,
+  creatorId,
+  date,
+  userCommentExist,
+  onDeleteComment,
+}) => {
+  const [loadedCommentCreator, setLoadedCommentCreator] = useState();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const auth = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchCommentCreator = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/users/${creatorId}`
+        );
+
+        // console.log(responseData);
+        setLoadedCommentCreator(responseData);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchCommentCreator();
+  }, []);
+
+  //   console.log(loadedCommentCreator);
+
   const commentDate = new Date(date);
   const dateNow = new Date();
   //   const publishedDate = `${dateNow.getHours() - commentDate.getHours()}`;
@@ -20,10 +54,45 @@ const CommentItem = ({ content, creatorId, date }) => {
     publishedDate = `${moment(dateNow).diff(commentDate, "days")} днів тому`;
   }
 
+  const confirmDeleteHandler = async () => {
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/comments/${commentId}`,
+        "DELETE",
+        null,
+        { Authorization: "Bearer " + auth.token }
+      );
+      onDeleteComment(commentId);
+    } catch (err) {
+      console.log(err);
+    }
+    console.log("delete comment");
+  };
+
   return (
-    <div className="comment__item">
-      <div>{creatorId}</div>
-      <p>{content}</p>
+    <div className={`comment ${userCommentExist && "exist__comment"}`}>
+      <div className="comment__header">
+        <div className="comment__image">
+          <Avatar
+            image="https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
+            alt={loadedCommentCreator && loadedCommentCreator.username}
+          />
+          {loadedCommentCreator && (
+            <div className="comment__username">
+              {loadedCommentCreator.username}
+            </div>
+          )}
+        </div>
+        {userCommentExist && (
+          <RiDeleteBin7Fill
+            className="bin__icon"
+            onClick={confirmDeleteHandler}
+          />
+        )}
+      </div>
+      <div className="comment__content">
+        <p>{content}</p>
+      </div>
       <div style={{ marginTop: 20 }}>{publishedDate}</div>
     </div>
   );
