@@ -10,6 +10,7 @@ const Avatar = (props) => {
         alt={props.alt}
         style={{ width: props.width, height: props.width }}
       />
+      <div style={{ marginLeft: 7 }}>{props.username}</div>
     </div>
   );
 };

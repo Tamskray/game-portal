@@ -60,11 +60,12 @@ const PostLike = ({ likes, postId }) => {
         footerClass="like__modal__actions"
         footer={
           <>
-            <Button label="Назад" onClick={closeModalHandler} />
+            <Button label="Назад" onClick={closeModalHandler} type="button" />
             <Button
               label="Увійти в акаунт"
               inverse
               onClick={() => navigate("/login")}
+              type="button"
             />
           </>
         }

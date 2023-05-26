@@ -4,6 +4,7 @@ const postSchema = new mongoose.Schema({
   title: { type: String, required: true },
   rubric: { type: String, required: true },
   content: { type: String, required: true },
+  description: { type: String, required: true },
   creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
   likes: { type: Map, of: Boolean },
   // comments: { type: Array, default: [] },

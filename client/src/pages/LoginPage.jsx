@@ -70,7 +70,7 @@ const LoginPage = () => {
   const loginSubmitHandler = async (event) => {
     event.preventDefault();
 
-    console.log(formState);
+    // console.log(formState);
 
     if (isLoginMode) {
       try {

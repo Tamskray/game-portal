@@ -37,9 +37,9 @@ const PostPage = () => {
           <h1>{loadedPost.title}</h1>
           <p>{loadedPost.content}</p>
           <PostCreator creatorId={loadedPost.creator} date={loadedPost.date} />
-          <hr />
+          <hr style={{ marginTop: 10 }} />
           <p>{loadedPost.content}</p>
-          <hr />
+          <hr style={{ marginBottom: 10 }} />
           <PostLike likes={loadedPost.likes} postId={loadedPost._id} />
           <PostComments
             postId={loadedPost._id}

@@ -89,3 +89,20 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+select {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 18px;
+  color: #242424;
+  background-color: #fff;
+}
+
+option {
+  display: block;
+  padding: 15px;
+  color: #242424;
+  background-color: #fff;
+}

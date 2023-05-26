@@ -14,7 +14,7 @@
 @media (max-width: 768px) {
   .creator__name {
     position: relative;
-    width: 23rem;
+    width: 15rem;
     bottom: 57px;
     left: 80px;
   }

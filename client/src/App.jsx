@@ -3,6 +3,7 @@ import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
+  useNavigate,
 } from "react-router-dom";
 // import { router } from "./router/roiting";
 import { useAuth } from "./hooks/auth-hook";
@@ -15,6 +16,7 @@ import UITestPage from "./pages/UITestPage";
 import LoginPage from "./pages/LoginPage";
 import PostsPage from "./pages/PostsPage";
 import PostPage from "./pages/PostPage";
+import NewPostPage from "./pages/NewPostPage";
 
 function App() {
   const { token, login, logout, userId, role } = useAuth();
@@ -39,6 +41,10 @@ function App() {
         {
           path: "/posts",
           element: <PostsPage />,
+        },
+        {
+          path: "/new-post",
+          element: role === "ADMIN" ? <NewPostPage /> : <Navigate to="/" />,
         },
         {
           path: "/posts/:postId",

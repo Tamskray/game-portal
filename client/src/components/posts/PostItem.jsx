@@ -5,7 +5,26 @@ import { AuthContext } from "../../context/auth-context";
 import LoadingSpinner from "../UI/loadingSpinner/LoadingSpinner";
 import { Link, useNavigate } from "react-router-dom";
 
+import { VscHeartFilled } from "react-icons/vsc";
+import { BiCommentDetail } from "react-icons/bi";
+import Avatar from "../UI/avatar/Avatar";
+
 import "./PostItem.css";
+
+const monthNames = [
+  "Січня",
+  "Лютого",
+  "Березня",
+  "Квітня",
+  "Травня",
+  "Червня",
+  "Липня",
+  "Серпня",
+  "Вересня",
+  "Жовтня",
+  "Листопада",
+  "Грудня",
+];
 
 const PostItem = ({
   id,
@@ -13,24 +32,21 @@ const PostItem = ({
   rubric,
   content,
   likes,
-
+  comments,
   creator,
   date,
 }) => {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const [loadedUser, setLoadedUser] = useState();
-  const [loadedComments, setLoadedComments] = useState();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
-  const isLiked = Boolean(likes[auth.userId]);
-  // const likeCount = Object.keys(likes).length;
 
   const [likeCount, setLikeCount] = useState(Object.keys(likes).length);
 
-  // console.log(isLiked);
-
-  // console.log(auth.role);
+  const postDate = new Date(date);
+  const publishedDate = `${postDate.getDate()} ${
+    monthNames[postDate.getMonth()]
+  }, ${postDate.getFullYear()}`;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -39,55 +55,14 @@ const PostItem = ({
           `http://localhost:5000/api/users/${creator}`
         );
 
-        // console.log(responseData);
-
         setLoadedUser(responseData);
       } catch (err) {
         console.log(err);
       }
     };
 
-    const fetchComments = async () => {
-      try {
-        const responseData = await sendRequest(
-          `http://localhost:5000/api/comments/post/${id}`
-        );
-
-        setLoadedComments(responseData);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchUser();
-    fetchComments();
-  }, []);
-  // [sendRequest]
-
-  const postLike = useCallback(async () => {
-    try {
-      await fetch(`http://localhost:5000/api/posts/${id}/like`, {
-        method: "PATCH",
-        body: JSON.stringify({
-          userId: auth.userId,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + auth.token,
-        },
-      })
-        .then((res) => res.json())
-        .then((res) => setLikeCount(Object.keys(res.likes).length));
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
-
-  const likeHandler = async (event) => {
-    event.preventDefault();
-
-    auth.isLoggedIn ? postLike() : navigate("/login");
-  };
+  }, [sendRequest]);
 
   return (
     <>
@@ -95,36 +70,40 @@ const PostItem = ({
         <LoadingSpinner />
       ) : (
         <div className="post__item">
-          <p>id: {id}</p>
+          <img
+            onClick={() => navigate(`/posts/${id}`)}
+            src="https://external-preview.redd.it/s40RczXEeh8Q0z6sc-u8cFFCpYdoUsjOpY9-Z-CDjms.jpg?auto=webp&s=7b5c42fc8df7cb5730705fd3e70a65f51750056e"
+          />
           <div className="post__content">
+            <div className="post__rubric">{rubric}</div>
             <Link to={`/posts/${id}`}>
               <div className="post__title">{title}</div>
             </Link>
-            <div className="post__rubric">{rubric}</div>
             <div className="post__description">{content}</div>
-            <p>{date}</p>
-            {loadedUser && (
+            <div className="post__footer">
               <div>
-                <p>Post by {loadedUser.username}</p>
-                {loadedUser.posts.map((post) => (
-                  <p key={post}>Post: {post}</p>
-                ))}
+                <Avatar
+                  image="https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
+                  alt="img"
+                  width="2rem"
+                  height="2rem"
+                  username={loadedUser && loadedUser.username}
+                />
               </div>
-            )}
-          </div>
-          <div>
-            Likes: {likeCount}
-            <Button label="like" onClick={likeHandler} />
-          </div>
-          {loadedComments && (
-            <div>
-              {loadedComments.map((comment) => (
-                <div key={comment._id}>{comment.content}</div>
-              ))}
+              <span>{publishedDate}</span>
+              <div className="post__icons">
+                <VscHeartFilled />
+                <span>{likeCount}</span>
+              </div>
+              <div className="post__icons">
+                <BiCommentDetail />
+                <span>{comments.length}</span>
+              </div>
             </div>
-          )}
+          </div>
         </div>
       )}
+      <hr />
     </>
   );
 };

@@ -14,7 +14,7 @@ const PostList = ({ items }) => {
 
   return (
     <>
-      <ul>
+      <ul style={{ padding: 0 }}>
         {items.map((post) => (
           <PostItem
             key={post._id}

@@ -32,7 +32,7 @@ class CommentController {
     console.log(req.userData.userId);
 
     if (req.userData.userId === undefined) {
-      console.log("Ти шо, придурок");
+      console.log("why");
     }
 
     let existingComment;

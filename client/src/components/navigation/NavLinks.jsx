@@ -32,6 +32,12 @@ const NavLinks = ({ cl }) => {
         <li>
           <NavLink to="/posts">Пости</NavLink>
         </li>
+        {auth.isLoggedIn && auth.role === "ADMIN" && (
+          <li>
+            <NavLink to="/new-post">Створити пост</NavLink>
+          </li>
+        )}
+
         {!auth.isLoggedIn && (
           <li>
             <NavLink to="/login">Увійти</NavLink>

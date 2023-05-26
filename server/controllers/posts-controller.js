@@ -38,13 +38,14 @@ class PostController {
     // ---------
 
     // creator will be removed in future on client
-    const { title, rubric, content, creator } = req.body;
+    const { title, rubric, description, content } = req.body;
 
     const newPost = new Post({
       title,
       rubric,
+      description,
       content,
-      creator,
+      creator: req.userData.userId,
       //   creator: req.userData.userId,
       comments: [],
       likes: {},
@@ -53,7 +54,7 @@ class PostController {
 
     let user;
     try {
-      user = await User.findById(creator);
+      user = await User.findById(req.userData.userId);
     } catch (err) {
       return res
         .status(500)
@@ -68,7 +69,9 @@ class PostController {
 
     try {
       await newPost.save();
-      await User.findByIdAndUpdate(creator, { $push: { posts: newPost.id } });
+      await User.findByIdAndUpdate(req.userData.userId, {
+        $push: { posts: newPost.id },
+      });
     } catch (err) {
       return res
         .status(500)

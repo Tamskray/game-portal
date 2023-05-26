@@ -37,7 +37,9 @@ class UserController {
       const userId = req.params.uid;
       const user = await User.findById(userId);
 
-      res.status(200).json({ username: user.username, posts: user.posts });
+      res
+        .status(200)
+        .json({ userId: user.id, username: user.username, posts: user.posts });
     } catch (err) {
       res.status(404).json({ message: err.message });
     }

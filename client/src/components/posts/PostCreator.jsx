@@ -19,7 +19,7 @@ const monthNames = [
   "Грудня",
 ];
 
-const PostCreator = ({ creatorId, date }) => {
+const PostCreator = ({ creatorId, date, avatarWidth, avatarHeight }) => {
   const [loadedCreator, setLoadedCreator] = useState();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -51,6 +51,8 @@ const PostCreator = ({ creatorId, date }) => {
             <Avatar
               image="https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
               alt={loadedCreator.username}
+              width={avatarWidth}
+              height={avatarHeight}
             />
             <div className="creator__name">
               Автор: {loadedCreator.username} | Опубліковано: {publishedDate}
