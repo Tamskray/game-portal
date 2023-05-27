@@ -66,43 +66,50 @@ const PostItem = ({
 
   return (
     <>
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <div className="post__item">
-          <img
-            onClick={() => navigate(`/posts/${id}`)}
-            src="https://external-preview.redd.it/s40RczXEeh8Q0z6sc-u8cFFCpYdoUsjOpY9-Z-CDjms.jpg?auto=webp&s=7b5c42fc8df7cb5730705fd3e70a65f51750056e"
-          />
-          <div className="post__content">
-            <div className="post__rubric">{rubric}</div>
-            <Link to={`/posts/${id}`}>
-              <div className="post__title">{title}</div>
-            </Link>
-            <div className="post__description">{content}</div>
-            <div className="post__footer">
-              <div>
-                <Avatar
-                  image="https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
-                  alt="img"
-                  width="2rem"
-                  height="2rem"
-                  username={loadedUser && loadedUser.username}
-                />
-              </div>
-              <span>{publishedDate}</span>
-              <div className="post__icons">
-                <VscHeartFilled />
-                <span>{likeCount}</span>
-              </div>
-              <div className="post__icons">
-                <BiCommentDetail />
-                <span>{comments.length}</span>
-              </div>
+      <div className="post__item">
+        <img
+          onClick={() => navigate(`/posts/${id}`)}
+          src="https://external-preview.redd.it/s40RczXEeh8Q0z6sc-u8cFFCpYdoUsjOpY9-Z-CDjms.jpg?auto=webp&s=7b5c42fc8df7cb5730705fd3e70a65f51750056e"
+        />
+        <div className="post__content">
+          <div className="post__rubric">{rubric}</div>
+          <Link to={`/posts/${id}`}>
+            <div className="post__title">{title}</div>
+          </Link>
+          <div className="post__description">{content}</div>
+          <div className="post__footer">
+            <div>
+              <Avatar
+                image="https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
+                alt="img"
+                width="2rem"
+                height="2rem"
+                username={loadedUser && loadedUser.username}
+              />
+            </div>
+            <span>{publishedDate}</span>
+            <div className="post__icons">
+              <VscHeartFilled />
+              <span>{likeCount}</span>
+            </div>
+            <div className="post__icons">
+              <BiCommentDetail />
+              <span>{comments.length}</span>
             </div>
           </div>
         </div>
+      </div>
+
+      {auth.userId === creator && (
+        <>
+          <Button
+            label="Редагувати"
+            onClick={() => navigate(`/update-posts/${id}`)}
+          />
+          <Button label="Видалити" danger />
+        </>
       )}
+
       <hr />
     </>
   );

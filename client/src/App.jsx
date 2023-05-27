@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   createBrowserRouter,
   Navigate,
@@ -17,9 +17,14 @@ import LoginPage from "./pages/LoginPage";
 import PostsPage from "./pages/PostsPage";
 import PostPage from "./pages/PostPage";
 import NewPostPage from "./pages/NewPostPage";
+import UpdatePostPage from "./pages/UpdatePostPage";
 
 function App() {
   const { token, login, logout, userId, role } = useAuth();
+
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
 
   const router = createBrowserRouter([
     {
@@ -49,6 +54,10 @@ function App() {
         {
           path: "/posts/:postId",
           element: <PostPage />,
+        },
+        {
+          path: "/update-posts/:postId",
+          element: <UpdatePostPage />,
         },
       ],
     },

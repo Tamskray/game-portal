@@ -2,15 +2,15 @@ import React from "react";
 import CommentItem from "./CommentItem";
 
 const CommentsList = ({ items, userCommentExist, deleteCommentHandler }) => {
-  if (items.length === 0) {
-    return (
-      <div className="center">
-        {/* <Card> */}
-        <h2>Коментарів ще немає</h2>
-        {/* </Card> */}
-      </div>
-    );
-  }
+  // if (items.length === 0) {
+  //   return (
+  //     <div className="center">
+  //       {/* <Card> */}
+  //       <h2>Коментарів ще немає</h2>
+  //       {/* </Card> */}
+  //     </div>
+  //   );
+  // }
 
   return (
     <>

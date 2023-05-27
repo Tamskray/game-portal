@@ -12,6 +12,7 @@ import { useHttpClient } from "../../hooks/http-hook";
 import LoadingSpinner from "../UI/loadingSpinner/LoadingSpinner";
 import CommentsList from "./comments/CommentsList";
 import CommentItem from "./comments/CommentItem";
+import { getPageCount, getPagesArray } from "../../utils/pages";
 
 const PostComments = ({ postId, comments }) => {
   const auth = useContext(AuthContext);
@@ -29,19 +30,71 @@ const PostComments = ({ postId, comments }) => {
     false
   );
 
-  const deleteCommentHandler = (deletedCommentId) => {
-    setLoadedComments((prevComments) =>
-      prevComments.filter((comment) => comment._id !== deletedCommentId)
-    );
+  const [limit, setLimit] = useState(2);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState("");
+  let pagesArray = getPagesArray(totalPages);
+
+  // console.log(pagesArray);
+  const [loadedAllComments, setLoadedAllComments] = useState();
+
+  const fetchAllComments = async (limit = 0, page = 0) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/comments/post/${postId}?limit=${limit}&page=${page}`
+      );
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        // throw new Error(responseData.message);
+        console.log(responseData.message);
+      }
+
+      setLoadedAllComments(responseData);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const fetchComments = useCallback(async () => {
+  useEffect(() => {
+    fetchAllComments();
+    console.log("all comments fetched");
+  }, []);
+
+  const fetchComments = useCallback(async (limit = 2, page = 0) => {
     try {
-      const responseData = await sendRequest(
-        `http://localhost:5000/api/comments/post/${postId}`
+      // const responseData1 = await sendRequest(
+      //   `http://localhost:5000/api/comments/post/${postId}?limit=${limit}&page=${page}`
+      // );
+
+      // const responseData = await axios.get(
+      //   `http://localhost:5000/api/comments/post/${postId}?limit=${limit}&page=${page}`
+      // );
+
+      const response = await fetch(
+        `http://localhost:5000/api/comments/post/${postId}?limit=${limit}&page=${page}`
       );
 
-      setLoadedComments(responseData.reverse());
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseData.message);
+      }
+      // console.log(response.json());
+      const totalCount = response.headers.get("X-Total-Count");
+      setTotalPages(getPageCount(totalCount, limit));
+      // console.log(response.headers.get("X-Total-Count"));
+      // console.log(totalCount);
+      // console.log(responseData.headers);
+
+      // console.log("sho " + totalCount);
+
+      // console.log(responseData);
+
+      // setLoadedComments(responseData.reverse());
+      setLoadedComments(responseData);
+      console.log(responseData);
+      // console.log(loadedComments);
     } catch (err) {
       console.log(err);
     }
@@ -50,8 +103,10 @@ const PostComments = ({ postId, comments }) => {
   useEffect(() => {
     console.log("refresh comments");
 
-    fetchComments();
-  }, [sendRequest, fetchComments]);
+    fetchComments(limit, page);
+  }, [fetchComments]);
+
+  // totalPages && console.log(totalPages);
 
   const commentSubmitHandler = async (event) => {
     event.preventDefault();
@@ -76,6 +131,7 @@ const PostComments = ({ postId, comments }) => {
         // body: formData,
       });
 
+      fetchAllComments();
       fetchComments();
 
       // setLoadedComments([
@@ -105,12 +161,32 @@ const PostComments = ({ postId, comments }) => {
 
   let commentCreatedByUser;
 
-  loadedComments &&
-    loadedComments.map((comment) => {
+  // loadedComments &&
+  //   loadedComments.map((comment) => {
+  //     if (auth.userId === comment.creatorId) {
+  //       commentCreatedByUser = comment.creatorId;
+  //     }
+  //   });
+
+  loadedAllComments &&
+    !loadedAllComments.message &&
+    loadedAllComments.map((comment) => {
       if (auth.userId === comment.creatorId) {
         commentCreatedByUser = comment.creatorId;
       }
     });
+
+  const deleteCommentHandler = (deletedCommentId) => {
+    setLoadedComments((prevComments) =>
+      prevComments.filter((comment) => comment._id !== deletedCommentId)
+    );
+
+    console.log("deleted");
+    fetchAllComments();
+    fetchComments();
+  };
+
+  // console.log(loadedComments);
 
   // console.log(
   //   loadedComments &&
@@ -130,13 +206,19 @@ const PostComments = ({ postId, comments }) => {
   //   // );
   // }, [commentSubmitHandler]);
 
+  const changePageHandler = (page) => {
+    setPage(page);
+    console.log("Page " + page);
+    fetchComments(limit, page);
+  };
+
   return (
     <>
       {isLoading && <LoadingSpinner />}
       {auth.isLoggedIn ? (
         commentCreatedByUser ? (
           <CommentsList
-            items={loadedComments.filter(
+            items={loadedAllComments.filter(
               (comment) => comment.creatorId === commentCreatedByUser
             )}
             userCommentExist
@@ -175,6 +257,33 @@ const PostComments = ({ postId, comments }) => {
             (comment) => comment.creatorId !== commentCreatedByUser
           )}
         />
+      )}
+      {/* {!loadedComments && !loadedAllComments && (
+        <h3 className="center">Коментарів немає</h3>
+      )} */}
+
+      {loadedAllComments?.message && (
+        <h3 className="center">Коментарів немає</h3>
+      )}
+      {pagesArray && (
+        <div>
+          {pagesArray.map((p) =>
+            page === p ? (
+              <Button
+                key={p}
+                label={p + 1}
+                inverse
+                onClick={() => changePageHandler(p)}
+              />
+            ) : (
+              <Button
+                key={p}
+                label={p + 1}
+                onClick={() => changePageHandler(p)}
+              />
+            )
+          )}
+        </div>
       )}
     </>
   );

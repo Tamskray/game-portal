@@ -3,9 +3,21 @@ import User from "../models/User.js";
 
 class PostController {
   async getPosts(req, res, next) {
+    const { limit, page } = req.query;
+
+    const pageSize = limit ? parseInt(limit) : 0;
+    const pageNumber = page ? parseInt(page) : 0;
+
     try {
       // const users = await User.find({}, "-password");
-      const posts = await Post.find();
+      const posts = await Post.find()
+        // .sort({ date: -1 })
+        .limit(pageSize)
+        .skip(pageSize * pageNumber);
+
+      const totalCount = await Post.countDocuments();
+      res.header("Access-Control-Expose-Headers", "X-Total-Count");
+      res.header("X-Total-Count", totalCount);
 
       res.status(200).json(posts);
     } catch (err) {
@@ -79,6 +91,42 @@ class PostController {
     }
 
     res.status(201).json(newPost);
+  }
+
+  async updatePost(req, res, next) {
+    const { title, rubric, description, content } = req.body;
+    const postId = req.params.pid;
+
+    let post;
+    try {
+      post = await Post.findById(postId);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong, could not find a post", err });
+    }
+
+    // if not convert to stirng. there`ll mongoose object id type, not string what we needed
+    if (post.creator.toString() !== req.userData.userId) {
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to edit this post" });
+    }
+
+    post.title = title;
+    post.rubric = rubric;
+    post.description = description;
+    post.content = content;
+
+    try {
+      await post.save();
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong, could update a post", err });
+    }
+
+    res.status(200).json(post);
   }
 
   async updatePostLike(req, res, next) {

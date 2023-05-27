@@ -5,9 +5,27 @@ import User from "../models/User.js";
 class CommentController {
   async getCommentsByPostId(req, res, next) {
     const postId = req.params.pid;
+    const { limit, page } = req.query;
+
+    // const { userId = null } = req.body;
+
+    // const skip = (page - 1) * limit;
+
+    // const totalCount = await Comment.countDocuments({ post: postId });
+
+    const pageSize = limit ? parseInt(limit) : 0;
+    const pageNumber = page ? parseInt(page) : 0;
+
     let comments;
     try {
-      comments = await Comment.find({ postId: postId });
+      comments = await Comment.find({ postId: postId })
+        .sort({ date: -1 })
+        .limit(pageSize)
+        .skip(pageSize * pageNumber);
+
+      const totalCount = await Comment.countDocuments({ postId: postId });
+      res.header("Access-Control-Expose-Headers", "X-Total-Count");
+      res.header("X-Total-Count", totalCount);
     } catch (err) {
       return res
         .status(500)
@@ -20,6 +38,22 @@ class CommentController {
         .json({ message: "Could not find comments for the provided post id" });
     }
 
+    // let userComment;
+    // try {
+    //   console.log(userId);
+    //   userComment = await Comment.find({
+    //     creatorId: userId,
+    //   });
+    // } catch (err) {
+    //   console.log("No authorized user comment");
+    // }
+
+    // console.log(userComment);
+
+    //
+    // const totalCount = comments.length;
+
+    // reverse to show newe comments firstly
     res.status(200).json(comments);
   }
 

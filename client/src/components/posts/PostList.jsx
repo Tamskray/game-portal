@@ -6,7 +6,7 @@ const PostList = ({ items }) => {
     return (
       <div className="center">
         {/* <Card> */}
-        <h2>Posts not found</h2>
+        <h2>Пости не знайдено</h2>
         {/* </Card> */}
       </div>
     );

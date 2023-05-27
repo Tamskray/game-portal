@@ -12,6 +12,7 @@ router.get("/:pid", PostController.getPostById);
 router.use(checkAuth);
 
 router.post("/", PostController.createPost);
+router.patch("/:pid", PostController.updatePost);
 
 router.patch("/:pid/like", PostController.updatePostLike);
 

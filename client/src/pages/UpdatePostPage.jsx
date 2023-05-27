@@ -1,17 +1,19 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../context/auth-context";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
 import { useHttpClient } from "../hooks/http-hook";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "../hooks/form-hook";
 import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
 import Input from "../components/UI/input/Input";
-import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../utils/validators";
 import Button from "../components/UI/Button/Button";
+import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../utils/validators";
+import { AuthContext } from "../context/auth-context";
 
-const NewPostPage = () => {
+const UpdatePostPage = () => {
   const auth = useContext(AuthContext);
-  const navigate = useNavigate();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [loadedPost, setLoadedPost] = useState();
+  const params = useParams();
+  const navigate = useNavigate();
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -35,15 +37,48 @@ const NewPostPage = () => {
     false
   );
 
-  const postSubmitHandler = async (event) => {
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/posts/${params.postId}`
+        );
+        setLoadedPost(responseData);
+        setFormData(
+          {
+            title: {
+              value: responseData.title,
+              isValid: false,
+            },
+            rubric: {
+              value: responseData.rubric,
+              isValid: true,
+            },
+            description: {
+              value: responseData.description,
+              isValid: false,
+            },
+            content: {
+              value: responseData.content,
+              isValid: false,
+            },
+          },
+          false
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchPost();
+  }, [sendRequest, params.postId, setFormData]);
+
+  const postUpdateSubmitHandler = async (event) => {
     event.preventDefault();
-
-    console.log(formState);
-
     try {
       await sendRequest(
-        "http://localhost:5000/api/posts",
-        "POST",
+        `http://localhost:5000/api/posts/${params.postId}`,
+        "PATCH",
         JSON.stringify({
           title: formState.inputs.title.value,
           rubric: formState.inputs.rubric.value,
@@ -55,17 +90,33 @@ const NewPostPage = () => {
           "Content-Type": "application/json",
         }
       );
-      navigate("/");
+
+      navigate("/posts");
     } catch (err) {
       console.log(err);
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (!loadedPost && !error) {
+    return (
+      <div className="center">
+        <h2>Не знайдено пост</h2>
+      </div>
+    );
+  }
+
   return (
     <>
-      <h2>Створення нового поста</h2>
-      <form className="place-form" onSubmit={postSubmitHandler}>
-        {isLoading && <LoadingSpinner />}
+      <h2>Оновлення поста</h2>
+      <form className="place-form" onSubmit={postUpdateSubmitHandler}>
         <Input
           id="title"
           element="input"
@@ -75,18 +126,20 @@ const NewPostPage = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Введіть назву"
           onInput={inputHandler}
+          initialValue={formState.inputs.title.value}
+          initialValid={true}
         />
         <Input
           id="rubric"
           element="input"
           type="text"
           label="Рубрика"
-          initialValue={formState.inputs.rubric.value}
-          initialValid={true}
           placeholder="Введіть рубрику поста.."
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Оберіть рубрику"
           onInput={inputHandler}
+          initialValue={formState.inputs.rubric.value}
+          initialValid={true}
         />
         {/* <select onChange={rubricChangeHandler}>
           <option>Новини</option>
@@ -101,6 +154,8 @@ const NewPostPage = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Введіть короткий опис"
           onInput={inputHandler}
+          initialValue={formState.inputs.description.value}
+          initialValid={true}
         />
         <Input
           id="content"
@@ -111,9 +166,11 @@ const NewPostPage = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Заповніть поле"
           onInput={inputHandler}
+          initialValue={formState.inputs.content.value}
+          initialValid={true}
         />
         <Button
-          label="Створити пост"
+          label="Оновити пост"
           type="submit"
           disabled={!formState.isValid}
         />
@@ -122,4 +179,4 @@ const NewPostPage = () => {
   );
 };
 
-export default NewPostPage;
+export default UpdatePostPage;

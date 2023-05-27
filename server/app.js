@@ -15,6 +15,12 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use(cors());
+// app.use(cors({ allowedHeaders: ["X-Total-Count"] }));
+
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Expose-Headers", "X-Total-Count");
+//   next();
+// });
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader(
