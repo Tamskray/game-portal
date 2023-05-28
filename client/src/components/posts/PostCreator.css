@@ -19,3 +19,13 @@
     left: 80px;
   }
 }
+
+@media (max-width: 350px) {
+  .creator__name {
+    position: relative;
+    width: 8rem;
+    bottom: 62px;
+    left: 80px;
+    font-size: 13px;
+  }
+}

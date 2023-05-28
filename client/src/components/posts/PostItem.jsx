@@ -30,6 +30,7 @@ const PostItem = ({
   id,
   title,
   rubric,
+  description,
   content,
   likes,
   comments,
@@ -76,7 +77,7 @@ const PostItem = ({
           <Link to={`/posts/${id}`}>
             <div className="post__title">{title}</div>
           </Link>
-          <div className="post__description">{content}</div>
+          <div className="post__description">{description}</div>
           <div className="post__footer">
             <div
               className="post__creator"

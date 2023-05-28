@@ -21,6 +21,7 @@ const PostList = ({ items }) => {
             id={post._id}
             title={post.title}
             rubric={post.rubric}
+            description={post.description}
             content={post.content}
             likes={post.likes}
             comments={post.comments}

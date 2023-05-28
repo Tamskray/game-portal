@@ -8,12 +8,23 @@ import Button from "../components/UI/Button/Button";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../utils/validators";
 import { AuthContext } from "../context/auth-context";
 
+import { convertToRaw, EditorState, ContentState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
+import "draft-js/dist/Draft.css";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 const UpdatePostPage = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedPost, setLoadedPost] = useState();
   const params = useParams();
   const navigate = useNavigate();
+
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -60,11 +71,19 @@ const UpdatePostPage = () => {
             },
             content: {
               value: responseData.content,
-              isValid: false,
+              isValid: true,
             },
           },
           false
         );
+
+        const contentBlock = htmlToDraft(responseData.content);
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        );
+        const editorState = EditorState.createWithContent(contentState);
+
+        setEditorState(editorState);
       } catch (err) {
         console.log(err);
       }
@@ -76,6 +95,7 @@ const UpdatePostPage = () => {
   const postUpdateSubmitHandler = async (event) => {
     event.preventDefault();
     try {
+      // console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
       await sendRequest(
         `http://localhost:5000/api/posts/${params.postId}`,
         "PATCH",
@@ -83,7 +103,7 @@ const UpdatePostPage = () => {
           title: formState.inputs.title.value,
           rubric: formState.inputs.rubric.value,
           description: formState.inputs.description.value,
-          content: formState.inputs.content.value,
+          content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
         }),
         {
           Authorization: "Bearer " + auth.token,
@@ -157,7 +177,7 @@ const UpdatePostPage = () => {
           initialValue={formState.inputs.description.value}
           initialValid={true}
         />
-        <Input
+        {/* <Input
           id="content"
           element="textarea"
           type="text"
@@ -168,7 +188,21 @@ const UpdatePostPage = () => {
           onInput={inputHandler}
           initialValue={formState.inputs.content.value}
           initialValid={true}
+        /> */}
+
+        <h4>Контент</h4>
+
+        <Editor
+          editorState={editorState}
+          onEditorStateChange={setEditorState}
+          wrapperClassName="wrapper-class"
+          editorClassName="editor-class"
+          toolbarClassName="toolbar-class"
+          // toolbar={{
+          //   options: ["inline"],
+          // }}
         />
+
         <Button
           label="Оновити пост"
           type="submit"

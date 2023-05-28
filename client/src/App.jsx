@@ -24,7 +24,7 @@ function App() {
   const { token, login, logout, userId, role } = useAuth();
 
   useEffect(() => {
-    localStorage.clear();
+    localStorage.setItem("sessionData", JSON.stringify({ postPage: 0 }));
   }, []);
 
   const router = createBrowserRouter([

@@ -47,6 +47,7 @@ const PostsPage = () => {
 
   useEffect(() => {
     // fetchPosts(limit, page);
+    console.clear();
     fetchPosts(limit, page);
   }, []);
 

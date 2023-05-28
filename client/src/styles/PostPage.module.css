@@ -1,0 +1,60 @@
+.post__content {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 1300px;
+  height: auto;
+}
+
+.post__content p {
+  word-wrap: break-word;
+}
+
+.post__content img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: auto 16 / 9;
+  object-fit: contain;
+  position: relative;
+  top: -30px;
+  bottom: 0px;
+  margin: auto;
+}
+
+blockquote {
+  background: #413f3f;
+  border-left: 10px solid #6b9bda;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+  color: #ffffff;
+}
+
+blockquote:before {
+  color: #b3b3b3;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+blockquote p {
+  display: inline;
+}
+
+@media (max-width: 768px) {
+  .post__content img {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 500px) {
+  .post__content img {
+    margin-top: 15px;
+    max-height: 200px;
+  }
+}

@@ -110,3 +110,35 @@ option {
 .posts__page__title {
   background-color: #585858;
 }
+
+.wrapper-class {
+  padding: 1rem;
+  /* border: 1px solid #ccc; */
+}
+.editor-class {
+  background-color: lightgray;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  color: black;
+}
+.toolbar-class {
+  border: 1px solid #ccc;
+  color: black;
+}
+
+.rdw-image-modal {
+  background-color: grey;
+}
+
+.rdw-image-modal input {
+  background-color: rgb(63, 63, 63);
+}
+
+.rdw-image-modal button {
+  background-color: rgb(32, 32, 32);
+}
+
+.rdw-image-modal button:disabled {
+  background-color: rgb(150, 146, 146);
+  color: rgb(65, 63, 63);
+}

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { AuthContext } from "../context/auth-context";
 import { useNavigate } from "react-router-dom";
 import { useHttpClient } from "../hooks/http-hook";
@@ -8,10 +8,21 @@ import Input from "../components/UI/input/Input";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../utils/validators";
 import Button from "../components/UI/Button/Button";
 
+import { convertToRaw, EditorState, ContentState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
+import "draft-js/dist/Draft.css";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 const NewPostPage = () => {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createEmpty()
+  );
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -27,10 +38,10 @@ const NewPostPage = () => {
         value: "",
         isValid: false,
       },
-      content: {
-        value: "",
-        isValid: false,
-      },
+      // content: {
+      //   value: "",
+      //   isValid: false,
+      // },
     },
     false
   );
@@ -48,7 +59,7 @@ const NewPostPage = () => {
           title: formState.inputs.title.value,
           rubric: formState.inputs.rubric.value,
           description: formState.inputs.description.value,
-          content: formState.inputs.content.value,
+          content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
         }),
         {
           Authorization: "Bearer " + auth.token,
@@ -102,7 +113,20 @@ const NewPostPage = () => {
           errorText="Введіть короткий опис"
           onInput={inputHandler}
         />
-        <Input
+
+        <h4>Контент</h4>
+
+        <Editor
+          editorState={editorState}
+          onEditorStateChange={setEditorState}
+          wrapperClassName="wrapper-class"
+          editorClassName="editor-class"
+          toolbarClassName="toolbar-class"
+          // toolbar={{
+          //   options: ["inline"],
+          // }}
+        />
+        {/* <Input
           id="content"
           element="textarea"
           type="text"
@@ -111,7 +135,7 @@ const NewPostPage = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Заповніть поле"
           onInput={inputHandler}
-        />
+        /> */}
         <Button
           label="Створити пост"
           type="submit"

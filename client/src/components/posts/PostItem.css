@@ -67,6 +67,7 @@ hr {
   justify-content: space-between;
   align-items: center;
   max-width: 500px;
+  min-width: 400px;
 }
 
 .post__creator {
@@ -110,5 +111,13 @@ hr {
 
   .post__footer {
     max-width: 540px;
+  }
+}
+
+@media (max-width: 500px) {
+  .post__footer {
+    max-width: 450px;
+    min-width: 280px;
+    flex-wrap: wrap;
   }
 }
