@@ -4,18 +4,36 @@ import User from "../models/User.js";
 class PostController {
   async getPosts(req, res, next) {
     const { limit, page } = req.query;
+    const userId = req.params.uid;
+
+    // console.log(req._parsedUrl.pathname);
 
     const pageSize = limit ? parseInt(limit) : 0;
     const pageNumber = page ? parseInt(page) : 0;
 
     try {
       // const users = await User.find({}, "-password");
-      const posts = await Post.find()
-        // .sort({ date: -1 })
-        .limit(pageSize)
-        .skip(pageSize * pageNumber);
+      let posts;
+      let totalCount;
+      if (req._parsedUrl.pathname === "/") {
+        console.log("all posts");
+        posts = await Post.find()
+          // .sort({ date: -1 })
+          .limit(pageSize)
+          .skip(pageSize * pageNumber);
 
-      const totalCount = await Post.countDocuments();
+        totalCount = await Post.countDocuments();
+      } else if (req._parsedUrl.pathname === `/user/${userId}`) {
+        console.log("User posts");
+        posts = await Post.find({ creator: userId })
+          // .sort({ date: -1 })
+          .limit(pageSize)
+          .skip(pageSize * pageNumber);
+
+        totalCount = await Post.countDocuments({ creator: userId });
+      }
+
+      // const totalCount = await Post.countDocuments();
       res.header("Access-Control-Expose-Headers", "X-Total-Count");
       res.header("X-Total-Count", totalCount);
 
@@ -24,6 +42,34 @@ class PostController {
       res.status(404).json({ message: err.message });
     }
   }
+
+  // async getPostsByUserId(req, res, next) {
+  //   const { limit, page } = req.query;
+  //   const userId = req.params.uid;
+
+  //   // console.log(req._parsedUrl.pathname);
+
+  //   const pageSize = limit ? parseInt(limit) : 0;
+  //   const pageNumber = page ? parseInt(page) : 0;
+
+  //   try {
+  //     // const users = await User.find({}, "-password");
+
+  //     console.log("User posts");
+  //     const posts = await Post.find({ creator: userId })
+  //       // .sort({ date: -1 })
+  //       .limit(pageSize)
+  //       .skip(pageSize * pageNumber);
+
+  //     const totalCount = await Post.countDocuments();
+  //     res.header("Access-Control-Expose-Headers", "X-Total-Count");
+  //     res.header("X-Total-Count", totalCount);
+
+  //     res.status(200).json(posts);
+  //   } catch (err) {
+  //     res.status(404).json({ message: err.message });
+  //   }
+  // }
 
   async getPostById(req, res, next) {
     const postId = req.params.pid;

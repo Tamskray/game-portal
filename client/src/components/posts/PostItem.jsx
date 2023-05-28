@@ -78,7 +78,10 @@ const PostItem = ({
           </Link>
           <div className="post__description">{content}</div>
           <div className="post__footer">
-            <div>
+            <div
+              className="post__creator"
+              onClick={() => navigate(`/${creator}/posts`)}
+            >
               <Avatar
                 image="https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
                 alt="img"

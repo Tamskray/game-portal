@@ -28,6 +28,7 @@ const PostPage = () => {
   }, [sendRequest, params.postId]);
 
   // console.log(loadedPost);
+  console.log(loadedPost && loadedPost);
 
   return (
     <>

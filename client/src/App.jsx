@@ -18,6 +18,7 @@ import PostsPage from "./pages/PostsPage";
 import PostPage from "./pages/PostPage";
 import NewPostPage from "./pages/NewPostPage";
 import UpdatePostPage from "./pages/UpdatePostPage";
+import UserPostsPage from "./pages/UserPostsPage";
 
 function App() {
   const { token, login, logout, userId, role } = useAuth();
@@ -54,6 +55,10 @@ function App() {
         {
           path: "/posts/:postId",
           element: <PostPage />,
+        },
+        {
+          path: "/:userId/posts",
+          element: <UserPostsPage />,
         },
         {
           path: "/update-posts/:postId",

@@ -29,13 +29,22 @@ const NavLinks = ({ cl }) => {
             <NavLink to="/uitest">UI-test</NavLink>
           </li>
         )}
-        <li>
+        <li
+          onClick={() =>
+            localStorage.setItem("sessionData", JSON.stringify({ postPage: 0 }))
+          }
+        >
           <NavLink to="/posts">Пости</NavLink>
         </li>
         {auth.isLoggedIn && auth.role === "ADMIN" && (
-          <li>
-            <NavLink to="/new-post">Створити пост</NavLink>
-          </li>
+          <>
+            <li>
+              <NavLink to={`/${auth.userId}/posts`}>Мої пости</NavLink>
+            </li>
+            <li>
+              <NavLink to="/new-post">Створити пост</NavLink>
+            </li>
+          </>
         )}
 
         {!auth.isLoggedIn && (

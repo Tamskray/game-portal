@@ -69,6 +69,15 @@ hr {
   max-width: 500px;
 }
 
+.post__creator {
+  color: #6b9bda;
+  cursor: pointer;
+}
+
+.post__creator:hover {
+  color: #18cf00;
+}
+
 .post__icons {
   display: flex;
   font-size: 20px;

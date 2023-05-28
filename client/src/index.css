@@ -106,3 +106,7 @@ option {
   color: #242424;
   background-color: #fff;
 }
+
+.posts__page__title {
+  background-color: #585858;
+}

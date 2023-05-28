@@ -8,6 +8,7 @@ const router = new Router();
 
 router.get("/", PostController.getPosts);
 router.get("/:pid", PostController.getPostById);
+router.get("/user/:uid", PostController.getPosts);
 
 router.use(checkAuth);
 
