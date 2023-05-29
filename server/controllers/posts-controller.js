@@ -18,7 +18,7 @@ class PostController {
       if (req._parsedUrl.pathname === "/") {
         console.log("all posts");
         posts = await Post.find()
-          // .sort({ date: -1 })
+          .sort({ date: -1 })
           .limit(pageSize)
           .skip(pageSize * pageNumber);
 
@@ -26,7 +26,7 @@ class PostController {
       } else if (req._parsedUrl.pathname === `/user/${userId}`) {
         console.log("User posts");
         posts = await Post.find({ creator: userId })
-          // .sort({ date: -1 })
+          .sort({ date: -1 })
           .limit(pageSize)
           .skip(pageSize * pageNumber);
 
@@ -91,6 +91,7 @@ class PostController {
     res.json(post);
   }
 
+  // CREATE
   async createPost(req, res, next) {
     // express validation results
     // ---------
@@ -98,11 +99,19 @@ class PostController {
     // creator will be removed in future on client
     const { title, rubric, description, content } = req.body;
 
+    let imagePath;
+    if (req.file) {
+      imagePath = req.file.path;
+    } else {
+      imagePath = null;
+    }
+
     const newPost = new Post({
       title,
       rubric,
       description,
       content,
+      image: imagePath,
       creator: req.userData.userId,
       //   creator: req.userData.userId,
       comments: [],
@@ -139,6 +148,7 @@ class PostController {
     res.status(201).json(newPost);
   }
 
+  // UPDATE
   async updatePost(req, res, next) {
     const { title, rubric, description, content } = req.body;
     const postId = req.params.pid;
@@ -175,6 +185,7 @@ class PostController {
     res.status(200).json(post);
   }
 
+  // LIKE
   async updatePostLike(req, res, next) {
     const postId = req.params.pid;
     const { userId } = req.body;
@@ -217,6 +228,7 @@ class PostController {
     res.status(200).json({ likes: post.likes });
   }
 
+  // DELETE
   async deletePost(req, res, next) {
     const postId = req.params.pid;
 

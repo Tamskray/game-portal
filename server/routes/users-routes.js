@@ -2,6 +2,9 @@ import Router from "express";
 import UserController from "../controllers/users-controller.js";
 import { check } from "express-validator";
 import { checkRole } from "../middleware/check-role.js";
+import { fileUpload } from "../middleware/file-upload.js";
+
+import * as fs from "fs";
 
 const router = new Router();
 
@@ -12,6 +15,15 @@ router.get("/:uid", UserController.getUserById);
 
 router.post(
   "/signup",
+  fileUpload.single("image"),
+  // (req, res) => {
+  //   if (req.file) {
+  //     console.log("i see file");
+  //     fs.unlink(req.file.path, (err) => {
+  //       console.log(err);
+  //     });
+  //   }
+  // },
   [
     check("username", "Username must contain at least 3 characters").isLength({
       min: 3,

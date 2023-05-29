@@ -1,5 +1,6 @@
-import User from "../models/User.js";
+import * as fs from "fs";
 
+import User from "../models/User.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
@@ -37,9 +38,12 @@ class UserController {
       const userId = req.params.uid;
       const user = await User.findById(userId);
 
-      res
-        .status(200)
-        .json({ userId: user.id, username: user.username, posts: user.posts });
+      res.status(200).json({
+        userId: user.id,
+        username: user.username,
+        posts: user.posts,
+        image: user.image || null,
+      });
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
@@ -55,6 +59,8 @@ class UserController {
 
     const { username, email, password } = req.body;
 
+    // console.log(req.file.path);
+
     let existingUser;
     try {
       existingUser = await User.findOne({ email: email });
@@ -65,6 +71,13 @@ class UserController {
     }
 
     if (existingUser) {
+      if (req.file) {
+        fs.unlink(req.file.path, (err) => {
+          if (err) {
+            console.error("Failed to delete image:", err);
+          }
+        });
+      }
       return res
         .status(422)
         .json({ message: "User exists already, email already exists" });
@@ -81,9 +94,17 @@ class UserController {
         .json({ message: "Could not create user, please try again" });
     }
 
+    let imagePath;
+    if (req.file) {
+      imagePath = req.file.path;
+    } else {
+      imagePath = null;
+    }
+
     const newUser = new User({
       username,
       email,
+      image: imagePath,
       password: hashedPassword,
       roles: [userRole.value],
     });
@@ -93,7 +114,7 @@ class UserController {
     } catch (err) {
       return res
         .status(500)
-        .json({ message: "Signing up failed, please try again later", err });
+        .json({ message: "Signing up failed, please try again later ", err });
     }
 
     const token = generateAccessToken(newUser.id, newUser.email, newUser.roles);

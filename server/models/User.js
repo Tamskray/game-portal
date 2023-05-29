@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 4 },
+  image: { type: String, required: false },
   roles: [{ type: String, ref: "Role" }],
   posts: [
     {
@@ -13,7 +14,6 @@ const userSchema = new mongoose.Schema({
       ref: "Post",
     },
   ],
-  // avatarImage: { type: String, required: true },
   // posts, ref Post
   // comments
   // mb likes

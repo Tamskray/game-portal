@@ -74,7 +74,11 @@ const CommentItem = ({
       <div className="comment__header">
         <div className="comment__image">
           <Avatar
-            image="https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
+            image={
+              loadedCommentCreator && loadedCommentCreator.image
+                ? "http://localhost:5000/" + loadedCommentCreator.image
+                : "https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
+            }
             alt={loadedCommentCreator && loadedCommentCreator.username}
           />
           {loadedCommentCreator && (

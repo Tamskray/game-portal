@@ -26,11 +26,13 @@
 
 blockquote {
   background: #413f3f;
+  max-width: 1300px;
   border-left: 10px solid #6b9bda;
   margin: 1.5em 10px;
   padding: 0.5em 10px;
   quotes: "\201C""\201D""\2018""\2019";
   color: #ffffff;
+  word-wrap: break-word;
 }
 
 blockquote:before {

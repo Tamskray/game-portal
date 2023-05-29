@@ -3,6 +3,7 @@ import PostController from "../controllers/posts-controller.js";
 // import { check } from "express-validator";
 import { checkAuth } from "../middleware/check-auth.js";
 // import { checkRole } from "../middleware/check-role.js";
+import { fileUpload } from "../middleware/file-upload.js";
 
 const router = new Router();
 
@@ -12,7 +13,7 @@ router.get("/user/:uid", PostController.getPosts);
 
 router.use(checkAuth);
 
-router.post("/", PostController.createPost);
+router.post("/", fileUpload.single("image"), PostController.createPost);
 router.patch("/:pid", PostController.updatePost);
 
 router.patch("/:pid/like", PostController.updatePostLike);

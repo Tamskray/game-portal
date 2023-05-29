@@ -7,6 +7,7 @@ import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
 import Input from "../components/UI/input/Input";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../utils/validators";
 import Button from "../components/UI/Button/Button";
+import ImageUpload from "../components/image-upload/ImageUpload";
 
 import { convertToRaw, EditorState, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -38,6 +39,10 @@ const NewPostPage = () => {
         value: "",
         isValid: false,
       },
+      image: {
+        value: null,
+        isValid: true,
+      },
       // content: {
       //   value: "",
       //   isValid: false,
@@ -52,21 +57,33 @@ const NewPostPage = () => {
     console.log(formState);
 
     try {
+      const formData = new FormData();
+      formData.append("title", formState.inputs.title.value);
+      formData.append("rubric", formState.inputs.rubric.value);
+      formData.append("description", formState.inputs.description.value);
+      formData.append(
+        "content",
+        draftToHtml(convertToRaw(editorState.getCurrentContent()))
+      );
+      formData.append("image", formState.inputs.image.value);
+
       await sendRequest(
         "http://localhost:5000/api/posts",
         "POST",
-        JSON.stringify({
-          title: formState.inputs.title.value,
-          rubric: formState.inputs.rubric.value,
-          description: formState.inputs.description.value,
-          content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
-        }),
-        {
-          Authorization: "Bearer " + auth.token,
-          "Content-Type": "application/json",
-        }
+        formData,
+        { Authorization: "Bearer " + auth.token }
+        // JSON.stringify({
+        //   title: formState.inputs.title.value,
+        //   rubric: formState.inputs.rubric.value,
+        //   description: formState.inputs.description.value,
+        //   content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+        // }),
+        // {
+        //   Authorization: "Bearer " + auth.token,
+        //   "Content-Type": "application/json",
+        // }
       );
-      navigate("/");
+      navigate("/posts");
     } catch (err) {
       console.log(err);
     }
@@ -112,6 +129,13 @@ const NewPostPage = () => {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Введіть короткий опис"
           onInput={inputHandler}
+        />
+
+        <ImageUpload
+          center
+          id="image"
+          onInput={inputHandler}
+          errorText="Оберіть зображення"
         />
 
         <h4>Контент</h4>

@@ -27,6 +27,7 @@ const PostList = ({ items }) => {
             comments={post.comments}
             creator={post.creator}
             date={post.date}
+            image={post.image}
           />
         ))}
       </ul>

@@ -8,6 +8,7 @@ import {
 
 import Input from "../components/UI/input/Input";
 import Button from "../components/UI/Button/Button";
+import ImageUpload from "../components/image-upload/ImageUpload";
 
 import { Transition } from "react-transition-group";
 import { AuthContext } from "../context/auth-context";
@@ -43,7 +44,7 @@ const LoginPage = () => {
         {
           ...formState.inputs,
           username: undefined,
-          // image: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -55,10 +56,10 @@ const LoginPage = () => {
             value: "",
             isValid: false,
           },
-          // image: {
-          //   value: null,
-          //   isValid: false,
-          // },
+          image: {
+            value: null,
+            isValid: true,
+          },
         },
         false
       );
@@ -100,18 +101,22 @@ const LoginPage = () => {
         formData.append("username", formState.inputs.username.value);
         formData.append("email", formState.inputs.email.value);
         formData.append("password", formState.inputs.password.value);
-        // formData.append("image", formState.inputs.image.value);
+        formData.append("image", formState.inputs.image.value);
+
+        // console.log(formState.inputs.image.value);
+
         const responseData = await sendRequest(
           "http://localhost:5000/api/users/signup",
           "POST",
-          JSON.stringify({
-            username: formState.inputs.username.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-          {
-            "Content-Type": "application/json",
-          }
+          formData
+          // JSON.stringify({
+          //   username: formState.inputs.username.value,
+          //   email: formState.inputs.email.value,
+          //   password: formState.inputs.password.value,
+          // }),
+          // {
+          //   "Content-Type": "application/json",
+          // }
           // formData
         );
 
@@ -142,14 +147,14 @@ const LoginPage = () => {
                   onInput={inputHandler}
                 />
               )}
-              {/* {!isLoginMode && (
-            <ImageUpload
-              center
-              id="image"
-              onInput={inputHandler}
-              errorText="Please pick image"
-            />
-          )} */}
+              {!isLoginMode && (
+                <ImageUpload
+                  center
+                  id="image"
+                  onInput={inputHandler}
+                  errorText="Оберіть картинку"
+                />
+              )}
               <Input
                 element="input"
                 id="email"

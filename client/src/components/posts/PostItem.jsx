@@ -36,6 +36,7 @@ const PostItem = ({
   comments,
   creator,
   date,
+  image,
 }) => {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
@@ -70,7 +71,11 @@ const PostItem = ({
       <div className="post__item">
         <img
           onClick={() => navigate(`/posts/${id}`)}
-          src="https://external-preview.redd.it/s40RczXEeh8Q0z6sc-u8cFFCpYdoUsjOpY9-Z-CDjms.jpg?auto=webp&s=7b5c42fc8df7cb5730705fd3e70a65f51750056e"
+          src={
+            image && image
+              ? "http://localhost:5000/" + image
+              : "https://external-preview.redd.it/s40RczXEeh8Q0z6sc-u8cFFCpYdoUsjOpY9-Z-CDjms.jpg?auto=webp&s=7b5c42fc8df7cb5730705fd3e70a65f51750056e"
+          }
         />
         <div className="post__content">
           <div className="post__rubric">{rubric}</div>
