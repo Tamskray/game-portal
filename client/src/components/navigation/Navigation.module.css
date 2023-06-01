@@ -31,8 +31,12 @@
 .menu {
   display: flex;
   gap: 1em;
-  font-size: 18px;
+  font-size: 15px;
   margin-right: 10px;
+}
+
+.menu__admin {
+  font-size: 12px;
 }
 
 .menu li a:hover,
@@ -46,6 +50,10 @@
   padding: 5px 14px;
 }
 
+.menu__admin li {
+  padding: 1px 1px;
+}
+
 input[type="checkbox"] {
   display: none;
 }
@@ -55,6 +63,60 @@ input[type="checkbox"] {
   font-size: 24px;
   user-select: none;
   margin-right: 10px;
+}
+
+.search {
+  font-size: 30px;
+  cursor: pointer;
+  position: relative;
+  bottom: 5px;
+  margin-bottom: -15px;
+}
+
+.search:hover {
+  color: #18cf00;
+}
+
+.search__input {
+  color: black;
+  width: 100%;
+  max-width: 98%;
+  font: inherit;
+  border: 1px solid #ccc;
+  background: #f8f8f8;
+  padding: 0.15rem 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.modal__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.close__icon {
+  cursor: pointer;
+}
+
+.close__icon:hover {
+  opacity: 50%;
+}
+
+.search__item {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  border-bottom: 2px solid rgb(173, 173, 173);
+  cursor: pointer;
+}
+
+.search__item:hover {
+  background-color: #2e2e2e;
+}
+
+.search__item__description {
+  font-size: 14px;
+  opacity: 80%;
 }
 
 @media (max-width: 768px) {

@@ -1,7 +1,12 @@
 import React from "react";
 import CommentItem from "./CommentItem";
 
-const CommentsList = ({ items, userCommentExist, deleteCommentHandler }) => {
+const CommentsList = ({
+  items,
+  userCommentExist,
+  deleteCommentHandler,
+  activity,
+}) => {
   // if (items.length === 0) {
   //   return (
   //     <div className="center">
@@ -21,9 +26,11 @@ const CommentsList = ({ items, userCommentExist, deleteCommentHandler }) => {
             commentId={item._id}
             content={item.content}
             creatorId={item.creatorId}
+            postId={item.postId}
             date={item.date}
             userCommentExist={userCommentExist}
             onDeleteComment={deleteCommentHandler}
+            activity={activity}
           />
         ))}
       </ul>

@@ -56,7 +56,22 @@ const PostPage = () => {
       {isLoading && <LoadingSpinner />}
       {!isLoading && loadedPost && (
         <div className="post">
-          <h1>{loadedPost.title}</h1>
+          <div className={cl.post__image__container}>
+            {loadedPost.image && (
+              <img
+                className={cl.post__image}
+                src={
+                  loadedPost.image &&
+                  "http://localhost:5000/" + loadedPost.image
+                }
+                alt="postImage"
+              />
+            )}
+            <h1 className={cl.post__title}>{loadedPost.title}</h1>
+          </div>
+
+          {!loadedPost.image && <h1>{loadedPost.title}</h1>}
+
           <p>{loadedPost.description}</p>
           <PostCreator creatorId={loadedPost.creator} date={loadedPost.date} />
           <hr style={{ marginTop: 10 }} />

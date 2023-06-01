@@ -19,12 +19,16 @@ import PostPage from "./pages/PostPage";
 import NewPostPage from "./pages/NewPostPage";
 import UpdatePostPage from "./pages/UpdatePostPage";
 import UserPostsPage from "./pages/UserPostsPage";
+import UserProfilePage from "./pages/UserProfilePage";
 
 function App() {
   const { token, login, logout, userId, role } = useAuth();
 
+  // console.log(!!token);
+
   useEffect(() => {
     localStorage.setItem("sessionData", JSON.stringify({ postPage: 0 }));
+    // console.log(token);
   }, []);
 
   const router = createBrowserRouter([
@@ -44,9 +48,21 @@ function App() {
           path: "/login",
           element: <LoginPage />,
         },
+        // {
+        //   path: "/posts",
+        //   element: <PostsPage />,
+        // },
         {
-          path: "/posts",
-          element: <PostsPage />,
+          path: "/news",
+          element: <PostsPage news />,
+        },
+        {
+          path: "/articles",
+          element: <PostsPage articles />,
+        },
+        {
+          path: "/reviews",
+          element: <PostsPage reviews />,
         },
         {
           path: "/new-post",
@@ -63,6 +79,10 @@ function App() {
         {
           path: "/update-posts/:postId",
           element: <UpdatePostPage />,
+        },
+        {
+          path: "/profile/:uid",
+          element: token ? <UserProfilePage /> : <Navigate to="/" />,
         },
       ],
     },

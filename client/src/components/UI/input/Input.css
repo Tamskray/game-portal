@@ -28,7 +28,6 @@
 .form-control textarea:focus {
   outline: none;
   background: #ebebeb;
-  border-color: #510077;
 }
 
 .form-control--invalid label,

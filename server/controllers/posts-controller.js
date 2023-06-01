@@ -1,3 +1,5 @@
+import * as fs from "fs";
+
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
@@ -6,7 +8,7 @@ class PostController {
     const { limit, page } = req.query;
     const userId = req.params.uid;
 
-    // console.log(req._parsedUrl.pathname);
+    console.log(req._parsedUrl.pathname);
 
     const pageSize = limit ? parseInt(limit) : 0;
     const pageNumber = page ? parseInt(page) : 0;
@@ -31,6 +33,30 @@ class PostController {
           .skip(pageSize * pageNumber);
 
         totalCount = await Post.countDocuments({ creator: userId });
+      } else if (req._parsedUrl.pathname === "/news") {
+        console.log("News");
+        posts = await Post.find({ rubric: "Новини" })
+          .sort({ date: -1 })
+          .limit(pageSize)
+          .skip(pageSize * pageNumber);
+
+        totalCount = await Post.countDocuments({ rubric: "Новини" });
+      } else if (req._parsedUrl.pathname === "/articles") {
+        console.log("Articles");
+        posts = await Post.find({ rubric: "Статті" })
+          .sort({ date: -1 })
+          .limit(pageSize)
+          .skip(pageSize * pageNumber);
+
+        totalCount = await Post.countDocuments({ rubric: "Статті" });
+      } else if (req._parsedUrl.pathname === "/reviews") {
+        console.log("Reviews");
+        posts = await Post.find({ rubric: "Огляди" })
+          .sort({ date: -1 })
+          .limit(pageSize)
+          .skip(pageSize * pageNumber);
+
+        totalCount = await Post.countDocuments({ rubric: "Огляди" });
       }
 
       // const totalCount = await Post.countDocuments();
@@ -43,33 +69,38 @@ class PostController {
     }
   }
 
-  // async getPostsByUserId(req, res, next) {
-  //   const { limit, page } = req.query;
-  //   const userId = req.params.uid;
+  async getPopularPosts(req, res) {
+    try {
+      const popularPosts = await Post.aggregate([
+        {
+          $match: {
+            date: { $gte: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) },
+          },
+        },
+        {
+          $addFields: {
+            likesCount: { $size: { $objectToArray: "$likes" } },
+          },
+        },
+        {
+          $sort: { likesCount: -1 },
+        },
+        {
+          $limit: 5,
+        },
+      ]);
 
-  //   // console.log(req._parsedUrl.pathname);
+      const formattedPosts = popularPosts.map(
+        ({ _id, title, likes, image }) => {
+          return { _id, title, likes, image };
+        }
+      );
 
-  //   const pageSize = limit ? parseInt(limit) : 0;
-  //   const pageNumber = page ? parseInt(page) : 0;
-
-  //   try {
-  //     // const users = await User.find({}, "-password");
-
-  //     console.log("User posts");
-  //     const posts = await Post.find({ creator: userId })
-  //       // .sort({ date: -1 })
-  //       .limit(pageSize)
-  //       .skip(pageSize * pageNumber);
-
-  //     const totalCount = await Post.countDocuments();
-  //     res.header("Access-Control-Expose-Headers", "X-Total-Count");
-  //     res.header("X-Total-Count", totalCount);
-
-  //     res.status(200).json(posts);
-  //   } catch (err) {
-  //     res.status(404).json({ message: err.message });
-  //   }
-  // }
+      res.status(200).json(formattedPosts);
+    } catch (err) {
+      res.status(404).json({ message: err.message });
+    }
+  }
 
   async getPostById(req, res, next) {
     const postId = req.params.pid;
@@ -89,6 +120,56 @@ class PostController {
     }
 
     res.json(post);
+  }
+
+  async searchPosts(req, res) {
+    const searchQuery = req.query.q;
+
+    try {
+      let posts;
+      if (searchQuery) {
+        posts = await Post.aggregate([
+          {
+            $search: {
+              index: "default",
+              autocomplete: {
+                query: searchQuery, // noticed we assign a dynamic value to "query"
+                path: "title",
+              },
+            },
+          },
+          {
+            $limit: 5,
+          },
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              description: 1,
+              date: 1,
+            },
+          },
+        ]);
+
+        // console.log(posts);
+
+        if (
+          posts.length === 0 &&
+          searchQuery !== undefined &&
+          searchQuery.length > 2
+        ) {
+          // posts = [{ _id: 1, title: "Нічого не знайдено" }];
+          posts = "Нічого не знайдено";
+        }
+      } else {
+        // posts = [{ _id: 1, title: "" }];
+        posts = "";
+      }
+      // const posts = await Post.find({ title: { $search: searchQuery } });
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ error: "Error with searching posts" });
+    }
   }
 
   // CREATE
@@ -169,17 +250,38 @@ class PostController {
         .json({ message: "You are not allowed to edit this post" });
     }
 
+    if (req.file) {
+      post.image &&
+        fs.unlink(post.image, (err) => {
+          if (err) {
+            console.error("Failed to delete image:", err);
+          }
+        });
+    }
+
+    let imagePath;
+    if (req.file) {
+      imagePath = req.file.path;
+    } else {
+      imagePath = post.image;
+    }
+
+    console.log(imagePath);
+    // console.log("req  " + req.file.path);
+
     post.title = title;
     post.rubric = rubric;
     post.description = description;
     post.content = content;
+    post.image = imagePath;
 
     try {
       await post.save();
     } catch (err) {
-      return res
-        .status(500)
-        .json({ message: "Something went wrong, could update a post", err });
+      return res.status(500).json({
+        message: "Something went wrong, could not update a post",
+        err,
+      });
     }
 
     res.status(200).json(post);

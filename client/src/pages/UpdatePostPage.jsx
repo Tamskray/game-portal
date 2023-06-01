@@ -14,6 +14,7 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import "draft-js/dist/Draft.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import ImageUpload from "../components/image-upload/ImageUpload";
 
 const UpdatePostPage = () => {
   const auth = useContext(AuthContext);
@@ -40,10 +41,14 @@ const UpdatePostPage = () => {
         value: "",
         isValid: false,
       },
-      content: {
-        value: "",
-        isValid: false,
+      image: {
+        value: null,
+        isValid: true,
       },
+      // content: {
+      //   value: "",
+      //   isValid: false,
+      // },
     },
     false
   );
@@ -69,10 +74,14 @@ const UpdatePostPage = () => {
               value: responseData.description,
               isValid: false,
             },
-            content: {
-              value: responseData.content,
+            image: {
+              value: responseData.image,
               isValid: true,
             },
+            // content: {
+            //   value: responseData.content,
+            //   isValid: true,
+            // },
           },
           false
         );
@@ -96,22 +105,34 @@ const UpdatePostPage = () => {
     event.preventDefault();
     try {
       // console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+      const formData = new FormData();
+      formData.append("title", formState.inputs.title.value);
+      formData.append("rubric", formState.inputs.rubric.value);
+      formData.append("description", formState.inputs.description.value);
+      formData.append(
+        "content",
+        draftToHtml(convertToRaw(editorState.getCurrentContent()))
+      );
+      formData.append("image", formState.inputs.image.value);
+
       await sendRequest(
         `http://localhost:5000/api/posts/${params.postId}`,
         "PATCH",
-        JSON.stringify({
-          title: formState.inputs.title.value,
-          rubric: formState.inputs.rubric.value,
-          description: formState.inputs.description.value,
-          content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
-        }),
-        {
-          Authorization: "Bearer " + auth.token,
-          "Content-Type": "application/json",
-        }
+        formData,
+        { Authorization: "Bearer " + auth.token }
+        // JSON.stringify({
+        //   title: formState.inputs.title.value,
+        //   rubric: formState.inputs.rubric.value,
+        //   description: formState.inputs.description.value,
+        //   content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+        // }),
+        // {
+        //   Authorization: "Bearer " + auth.token,
+        //   "Content-Type": "application/json",
+        // }
       );
 
-      navigate("/posts");
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
@@ -132,6 +153,8 @@ const UpdatePostPage = () => {
       </div>
     );
   }
+
+  // console.log(loadedPost.image);
 
   return (
     <>
@@ -190,7 +213,17 @@ const UpdatePostPage = () => {
           initialValid={true}
         /> */}
 
-        <h4>Контент</h4>
+        <div>Контент</div>
+
+        <ImageUpload
+          center
+          id="image"
+          onInput={inputHandler}
+          errorText="Оберіть зображення"
+          imageUrl={
+            loadedPost.image && "http://localhost:5000/" + loadedPost.image
+          }
+        />
 
         <Editor
           editorState={editorState}

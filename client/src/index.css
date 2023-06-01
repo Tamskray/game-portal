@@ -5,13 +5,20 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #131212;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  background: rgb(44, 44, 51);
+  background: linear-gradient(
+    0deg,
+    rgba(10, 10, 13, 1) 1%,
+    rgb(20, 20, 20) 100%
+  );
 }
 
 #root {
@@ -20,6 +27,7 @@
 
   /* padding: 2rem; */
   text-align: center;
+  background-color: #242424;
 }
 
 .test {
@@ -29,6 +37,13 @@
 }
 
 body {
+  margin: 0;
+  /* background: rgb(126, 125, 125); */
+}
+
+main {
+  background-color: #242424;
+  padding: 0;
   margin: 0;
 }
 
@@ -108,7 +123,9 @@ option {
 }
 
 .posts__page__title {
-  background-color: #585858;
+  /* background-color: #585858; */
+  text-align: start;
+  margin-left: 1rem;
 }
 
 .wrapper-class {
@@ -141,4 +158,25 @@ option {
 .rdw-image-modal button:disabled {
   background-color: rgb(150, 146, 146);
   color: rgb(65, 63, 63);
+}
+
+.carousel__wrapper {
+  display: flex;
+  padding: 10px;
+  /* background-color: #202020; */
+  /* background-image: url(https://www.gamewallpapers.com/img_script/wallpaper_dir/img.php?src=wallpaper_the_witcher_3_wild_hunt_34_2560x1080.jpg&height=506&sharpen); */
+}
+
+.slider-container {
+  /* margin: 1rem; */
+  margin-top: 1rem;
+  margin-bottom: 5rem;
+  width: 90%;
+  max-width: 1100px;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  left: 50%;
+  transform: translateX(-50%);
+  /* left: 15%; */
 }

@@ -12,7 +12,7 @@ const UserPostsPage = () => {
   const [loadedPosts, setLoadedPosts] = useState();
   const [loadedCreator, setLoadedCreator] = useState();
   const [isLoading, setIsLoading] = useState(false);
-  const [limit, setLimit] = useState(2);
+  const [limit, setLimit] = useState(4);
   const [page, setPage] = useState(storedData ? storedData.postPage : 0);
   const [totalPages, setTotalPages] = useState("");
   const pagesArray = getPagesArray(totalPages);

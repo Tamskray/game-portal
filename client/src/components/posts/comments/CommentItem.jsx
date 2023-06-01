@@ -7,18 +7,22 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 import "./CommentItem.css";
 import Avatar from "../../UI/avatar/Avatar";
 import { AuthContext } from "../../../context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const CommentItem = ({
   commentId,
   content,
   creatorId,
+  postId,
   date,
   userCommentExist,
   onDeleteComment,
+  activity,
 }) => {
   const [loadedCommentCreator, setLoadedCommentCreator] = useState();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCommentCreator = async () => {
@@ -87,6 +91,11 @@ const CommentItem = ({
             </div>
           )}
         </div>
+        {activity && (
+          <div className="comment__activity" onClick={() => navigate(`/posts/${postId}`)}>
+            Перейти до поста
+          </div>
+        )}
         {userCommentExist && (
           <RiDeleteBin7Fill
             className="bin__icon"
@@ -97,7 +106,7 @@ const CommentItem = ({
       <div className="comment__content">
         <p>{content}</p>
       </div>
-      <div style={{ marginTop: 20 }}>{publishedDate}</div>
+      <div className="comment__date">{publishedDate}</div>
     </div>
   );
 };

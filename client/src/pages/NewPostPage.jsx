@@ -83,7 +83,7 @@ const NewPostPage = () => {
         //   "Content-Type": "application/json",
         // }
       );
-      navigate("/posts");
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
@@ -138,7 +138,7 @@ const NewPostPage = () => {
           errorText="Оберіть зображення"
         />
 
-        <h4>Контент</h4>
+        <div>Контент</div>
 
         <Editor
           editorState={editorState}

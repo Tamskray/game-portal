@@ -55,7 +55,7 @@ app.use("/api/posts", postsRoutes);
 app.use("/api/comments", commentsRoutes);
 
 app.use((req, res, next) => {
-  res.status(404).message("Could not find this route");
+  res.status(404).json({ message: "Could not find this route" });
 });
 
 mongoose

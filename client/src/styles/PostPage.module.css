@@ -1,3 +1,30 @@
+.post__image__container {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.post__image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.post__title {
+  position: absolute;
+  bottom: 10px;
+  left: 15px;
+  background-color: #014fb4;
+  padding: 0px 10px 0px 40px;
+  margin-left: -1rem;
+  max-width: 760px;
+  word-wrap: break-word;
+}
+
 .post__content {
   display: flex;
   flex-direction: column;
@@ -52,11 +79,21 @@ blockquote p {
   .post__content img {
     max-height: 400px;
   }
+
+  .post__title {
+    font-size: 24px;
+    max-width: 500px;
+  }
 }
 
 @media (max-width: 500px) {
   .post__content img {
     margin-top: 15px;
     max-height: 200px;
+  }
+
+  .post__title {
+    font-size: 14px;
+    max-width: 200px;
   }
 }

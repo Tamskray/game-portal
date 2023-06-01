@@ -67,15 +67,13 @@ const PostComments = ({ postId, comments }) => {
       //   `http://localhost:5000/api/comments/post/${postId}?limit=${limit}&page=${page}`
       // );
 
-      // const responseData = await axios.get(
-      //   `http://localhost:5000/api/comments/post/${postId}?limit=${limit}&page=${page}`
-      // );
-
       const response = await fetch(
         `http://localhost:5000/api/comments/post/${postId}?limit=${limit}&page=${page}`
       );
 
       const responseData = await response.json();
+
+      // mb try check if comment by user exist
 
       if (!response.ok) {
         throw new Error(responseData.message);
@@ -83,18 +81,11 @@ const PostComments = ({ postId, comments }) => {
       // console.log(response.json());
       const totalCount = response.headers.get("X-Total-Count");
       setTotalPages(getPageCount(totalCount, limit));
-      // console.log(response.headers.get("X-Total-Count"));
-      // console.log(totalCount);
-      // console.log(responseData.headers);
-
-      // console.log("sho " + totalCount);
 
       // console.log(responseData);
 
-      // setLoadedComments(responseData.reverse());
       setLoadedComments(responseData);
       console.log(responseData);
-      // console.log(loadedComments);
     } catch (err) {
       console.log(err);
     }
@@ -111,12 +102,6 @@ const PostComments = ({ postId, comments }) => {
   const commentSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-      // const formData = new FormData();
-      // formData.append("content", formState.inputs.content.value);
-      // formData.append("postId", postId);
-
-      // console.log(formData.getAll);
-
       await fetch(`http://localhost:5000/api/comments`, {
         method: "POST",
         body: JSON.stringify({
@@ -265,7 +250,7 @@ const PostComments = ({ postId, comments }) => {
       {loadedAllComments?.message && (
         <h3 className="center">Коментарів немає</h3>
       )}
-      {pagesArray && (
+      {pagesArray && pagesArray.length > 1 && (
         <div>
           {pagesArray.map((p) =>
             page === p ? (

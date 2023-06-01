@@ -3,6 +3,7 @@ import UserController from "../controllers/users-controller.js";
 import { check } from "express-validator";
 import { checkRole } from "../middleware/check-role.js";
 import { fileUpload } from "../middleware/file-upload.js";
+import { checkAuth } from "../middleware/check-auth.js";
 
 import * as fs from "fs";
 
@@ -12,6 +13,8 @@ const router = new Router();
 router.get("/", UserController.getUsers);
 
 router.get("/:uid", UserController.getUserById);
+
+router.get("/profile/:uid", checkAuth, UserController.getUserProfileInfoById);
 
 router.post(
   "/signup",

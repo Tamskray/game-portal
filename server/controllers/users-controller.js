@@ -1,6 +1,7 @@
 import * as fs from "fs";
 
 import User from "../models/User.js";
+import Comment from "../models/Comment.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
@@ -40,6 +41,7 @@ class UserController {
 
       res.status(200).json({
         userId: user.id,
+        email: user.email,
         username: user.username,
         posts: user.posts,
         image: user.image || null,
@@ -47,6 +49,39 @@ class UserController {
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
+  }
+
+  async getUserProfileInfoById(req, res) {
+    const userId = req.params.uid;
+    const { limit, page } = req.query;
+
+    const pageSize = limit ? parseInt(limit) : 0;
+    const pageNumber = page ? parseInt(page) : 0;
+
+    let user;
+    let comments;
+    try {
+      user = await User.findById(userId);
+
+      comments = await Comment.find({ creatorId: userId })
+        .sort({ date: -1 })
+        .limit(pageSize)
+        .skip(pageSize * pageNumber);
+
+      const totalCount = await Comment.countDocuments({ creatorId: userId });
+      res.header("Access-Control-Expose-Headers", "X-Total-Count");
+      res.header("X-Total-Count", totalCount);
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+
+    res.status(200).json({
+      userId: user.id,
+      email: user.email,
+      username: user.username,
+      image: user.image || null,
+      comments: comments,
+    });
   }
 
   async signup(req, res, next) {
