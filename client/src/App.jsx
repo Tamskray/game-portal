@@ -20,6 +20,7 @@ import NewPostPage from "./pages/NewPostPage";
 import UpdatePostPage from "./pages/UpdatePostPage";
 import UserPostsPage from "./pages/UserPostsPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import GamePage from "./pages/GamePage";
 
 function App() {
   const { token, login, logout, userId, role } = useAuth();
@@ -71,6 +72,10 @@ function App() {
         {
           path: "/posts/:postId",
           element: <PostPage />,
+        },
+        {
+          path: "/game/:gameId",
+          element: <GamePage />,
         },
         {
           path: "/:userId/posts",

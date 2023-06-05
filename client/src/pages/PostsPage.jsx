@@ -80,7 +80,7 @@ const PostsPage = ({ news, articles, reviews }) => {
       {!isLoading && loadedPosts && (
         <>
           <h1 className="posts__page__title">
-            &#9632; {loadedPosts && loadedPosts[0].rubric}
+            &#9632; {loadedPosts && loadedPosts[0]?.rubric}
           </h1>
           <PostList items={loadedPosts} />{" "}
         </>

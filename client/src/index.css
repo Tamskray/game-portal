@@ -5,7 +5,13 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #131212;
+  /* background-color: #131212; */
+  background-color: #242424;
+  /* background: linear-gradient(
+    0deg,
+    rgba(10, 10, 13, 1) 1%,
+    rgb(20, 20, 20) 100%
+  ); */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,12 +19,12 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  background: rgb(44, 44, 51);
-  background: linear-gradient(
+  /* background: rgb(44, 44, 51); */
+  /* background: linear-gradient(
     0deg,
     rgba(10, 10, 13, 1) 1%,
     rgb(20, 20, 20) 100%
-  );
+  ); */
 }
 
 #root {
@@ -39,6 +45,15 @@
 body {
   margin: 0;
   /* background: rgb(126, 125, 125); */
+}
+
+::-webkit-scrollbar {
+  width: 0.2rem;
+  background-color: rgb(76, 76, 77);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(163, 162, 162);
 }
 
 main {

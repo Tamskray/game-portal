@@ -8,6 +8,7 @@ import cors from "cors";
 import usersRoutes from "./routes/users-routes.js";
 import postsRoutes from "./routes/posts-routes.js";
 import commentsRoutes from "./routes/comments-routes.js";
+import gamesRoutes from "./routes/games-routes.js";
 
 const app = express();
 
@@ -15,20 +16,8 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-// app.use(cors({ allowedHeaders: ["X-Total-Count"] }));
-
 // app.use((req, res, next) => {
-//   res.header("Access-Control-Expose-Headers", "X-Total-Count");
-//   next();
-// });
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-//   );
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
-//   // res.setHeader("Access-Control-Max-Age", "86400");
+//   res.setHeader("Access-Control-Allow-Origin", "http://api.steampowered.com");
 //   next();
 // });
 
@@ -53,6 +42,7 @@ app.use((error, req, res, next) => {
 app.use("/api/users", usersRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/comments", commentsRoutes);
+app.use("/api/games", gamesRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: "Could not find this route" });
