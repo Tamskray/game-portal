@@ -18,6 +18,10 @@
   list-style: none;
 }
 
+.nav_links {
+  display: flex;
+}
+
 .nav_links a {
   color: #fff;
 }
@@ -77,17 +81,6 @@ input[type="checkbox"] {
   color: #18cf00;
 }
 
-.search__input {
-  color: black;
-  width: 100%;
-  max-width: 98%;
-  font: inherit;
-  border: 1px solid #ccc;
-  background: #f8f8f8;
-  padding: 0.15rem 0.25rem;
-  margin-bottom: 1rem;
-}
-
 .modal__header {
   display: flex;
   flex-direction: row;
@@ -100,23 +93,6 @@ input[type="checkbox"] {
 
 .close__icon:hover {
   opacity: 50%;
-}
-
-.search__item {
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  border-bottom: 2px solid rgb(173, 173, 173);
-  cursor: pointer;
-}
-
-.search__item:hover {
-  background-color: #2e2e2e;
-}
-
-.search__item__description {
-  font-size: 14px;
-  opacity: 80%;
 }
 
 @media (max-width: 768px) {

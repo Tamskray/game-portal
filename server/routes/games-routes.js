@@ -7,10 +7,12 @@ import { fileUpload } from "../middleware/file-upload.js";
 
 const router = new Router();
 
-// router.get("/", GamesController.getGames);
+router.get("/", GamesController.getGames);
+
+router.get("/search", GamesController.searchGame);
 
 router.get("/:gid", GamesController.getGameById);
 
-router.post("/", GamesController.createGame);
+router.post("/", fileUpload.single("image"), GamesController.createGame);
 
 export default router;

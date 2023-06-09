@@ -9,7 +9,7 @@ const Navigation = () => {
   return (
     <nav className={cl.navbar}>
       <NavLink to="/">
-        <div className={cl.logo}>Logo Later</div>
+        <div className={cl.logo}>TMP</div>
       </NavLink>
       <NavLinks cl={cl} />
     </nav>

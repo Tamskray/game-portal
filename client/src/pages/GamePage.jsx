@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Carousel from "nuka-carousel";
 
+import Carousel from "nuka-carousel";
 import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
+import GamePosts from "../components/game/GamePosts";
+import {
+  renderCenterLeftControls,
+  renderCenterRightControls,
+} from "../components/UI/carouselControls/CarouselControls";
 
 import "../styles/GamePage.css";
-
 const GamePage = () => {
   const params = useParams();
   const [loadedGame, setLoadedGame] = useState();
@@ -31,7 +35,7 @@ const GamePage = () => {
 
   useEffect(() => {
     fetchGame();
-  }, []);
+  }, [params.gameId]);
 
   //   const [gameData, setGameData] = useGameInfo(loadedGame && loadedGame.title);
 
@@ -66,14 +70,16 @@ const GamePage = () => {
                 {loadedGame.game.date}
               </div>
             </div>
-            {/* <img
-              src={loadedGame.gameInfo.items[0].tiny_image}
-              alt={loadedGame.game.title}
-            /> */}
           </div>
 
           <div className="game__carousel">
-            <Carousel wrapAround autoplay autoplayInterval={5000}>
+            <Carousel
+              wrapAround
+              autoplay
+              autoplayInterval={5000}
+              renderCenterLeftControls={renderCenterLeftControls}
+              renderCenterRightControls={renderCenterRightControls}
+            >
               {loadedGame?.steamGameDetailInfo[
                 loadedGame.steamAppId
               ].data.screenshots.map((item) => (
@@ -97,7 +103,7 @@ const GamePage = () => {
                       <div className="achievement__item__info">
                         <div>{item.displayName}</div>
                         <div className="achievement__item__description">
-                          {item.description}
+                          {item.description || "Secret"}
                         </div>
                       </div>
                     </div>
@@ -106,6 +112,8 @@ const GamePage = () => {
               </div>
             </>
           )}
+
+          <GamePosts postTitle={loadedGame.game.title} />
         </div>
       )}
     </>

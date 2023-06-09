@@ -15,6 +15,7 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import "draft-js/dist/Draft.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { RiH2 } from "react-icons/ri";
 
 const NewPostPage = () => {
   const auth = useContext(AuthContext);
@@ -43,10 +44,6 @@ const NewPostPage = () => {
         value: null,
         isValid: true,
       },
-      // content: {
-      //   value: "",
-      //   isValid: false,
-      // },
     },
     false
   );
@@ -67,22 +64,9 @@ const NewPostPage = () => {
       );
       formData.append("image", formState.inputs.image.value);
 
-      await sendRequest(
-        "http://localhost:5000/api/posts",
-        "POST",
-        formData,
-        { Authorization: "Bearer " + auth.token }
-        // JSON.stringify({
-        //   title: formState.inputs.title.value,
-        //   rubric: formState.inputs.rubric.value,
-        //   description: formState.inputs.description.value,
-        //   content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
-        // }),
-        // {
-        //   Authorization: "Bearer " + auth.token,
-        //   "Content-Type": "application/json",
-        // }
-      );
+      await sendRequest("http://localhost:5000/api/posts", "POST", formData, {
+        Authorization: "Bearer " + auth.token,
+      });
       navigate("/");
     } catch (err) {
       console.log(err);

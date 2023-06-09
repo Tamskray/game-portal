@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getPageCount, getPagesArray } from "../utils/pages";
+import { useNavigate } from "react-router-dom";
 
 import PostList from "../components/posts/PostList";
 import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
@@ -7,34 +8,11 @@ import Button from "../components/UI/Button/Button";
 
 import Carousel from "nuka-carousel";
 import {
-  BsFillArrowLeftCircleFill,
-  BsFillArrowRightCircleFill,
-} from "react-icons/bs";
+  renderCenterLeftControls,
+  renderCenterRightControls,
+} from "../components/UI/carouselControls/CarouselControls";
 
 import cl from "../styles/PostsPage.module.css";
-import { useNavigate } from "react-router-dom";
-
-const renderCenterLeftControls = ({ previousDisabled, previousSlide }) => (
-  <button
-    className={cl.arrow__btn}
-    disabled={previousDisabled}
-    onClick={previousSlide}
-    aria-label="Go to previous slide"
-  >
-    <BsFillArrowLeftCircleFill size={32} />
-  </button>
-);
-
-const renderCenterRightControls = ({ nextDisabled, nextSlide }) => (
-  <button
-    className={cl.arrow__btn}
-    disabled={nextDisabled}
-    onClick={nextSlide}
-    aria-label="Go to next slide"
-  >
-    <BsFillArrowRightCircleFill size={32} />
-  </button>
-);
 
 const HomePage = () => {
   // localStorage.clear();

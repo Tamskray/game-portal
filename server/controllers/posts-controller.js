@@ -74,7 +74,7 @@ class PostController {
       const popularPosts = await Post.aggregate([
         {
           $match: {
-            date: { $gte: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) },
+            date: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
           },
         },
         {
@@ -133,7 +133,7 @@ class PostController {
             $search: {
               index: "default",
               autocomplete: {
-                query: searchQuery, // noticed we assign a dynamic value to "query"
+                query: searchQuery,
                 path: "title",
               },
             },
@@ -145,8 +145,14 @@ class PostController {
             $project: {
               _id: 1,
               title: 1,
+              rubric: 1,
               description: 1,
+              content: 1,
+              likes: 1,
+              comments: 1,
+              creator: 1,
               date: 1,
+              image: 1,
             },
           },
         ]);

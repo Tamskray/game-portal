@@ -2,7 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import Button from "../UI/Button/Button";
 import "./ImageUpload.css";
 
-const ImageUpload = ({ id, center, onInput, errorText, imageUrl }) => {
+const ImageUpload = ({
+  id,
+  center,
+  onInput,
+  errorText,
+  imageUrl,
+  width,
+  height,
+}) => {
   const [file, setFile] = useState();
   const [previewUrl, setPreviewUrl] = useState(imageUrl || undefined);
   //   const [isValid, setIsValid] = useState(false);
@@ -12,7 +20,7 @@ const ImageUpload = ({ id, center, onInput, errorText, imageUrl }) => {
   useEffect(() => {
     console.log("aaa " + imageUrl);
     // setPreviewUrl(imageUrl);
-    console.log("dsadas  " + previewUrl);
+    // console.log("dsadas  " + previewUrl);
   }, []);
 
   useEffect(() => {
@@ -48,19 +56,21 @@ const ImageUpload = ({ id, center, onInput, errorText, imageUrl }) => {
     filePickerRef.current.click();
   };
 
-  // css class form-control from Input.css
   return (
     <div className="form-control">
       <input
         id={id}
+        type="file"
         ref={filePickerRef}
         style={{ display: "none" }}
-        type="file"
         accept=".jpg,.png,.jpeg"
         onChange={pickedImageHandler}
       />
       <div className={`image-upload ${center && "center"}`}>
-        <div className="image-upload__preview">
+        <div
+          className="image-upload__preview"
+          style={width && { width: width, height: height }}
+        >
           {/* {previewUrl && !imageUrl && (
             <img src={imageUrl ? imageUrl : previewUrl} alt="Preview" />
           )}

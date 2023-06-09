@@ -21,11 +21,13 @@ import UpdatePostPage from "./pages/UpdatePostPage";
 import UserPostsPage from "./pages/UserPostsPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import GamePage from "./pages/GamePage";
+import NewGamePage from "./pages/NewGamePage";
 
 function App() {
   const { token, login, logout, userId, role } = useAuth();
 
-  // console.log(!!token);
+  console.log(role);
+  console.log("refresh");
 
   useEffect(() => {
     localStorage.setItem("sessionData", JSON.stringify({ postPage: 0 }));
@@ -68,6 +70,11 @@ function App() {
         {
           path: "/new-post",
           element: role === "ADMIN" ? <NewPostPage /> : <Navigate to="/" />,
+        },
+        {
+          path: "/add-game",
+          // element: <NewGamePage />,
+          element: role === "ADMIN" ? <NewGamePage /> : <Navigate to="/" />,
         },
         {
           path: "/posts/:postId",

@@ -1,23 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { AuthContext } from "../../context/auth-context";
 
 import { AiOutlineSearch } from "react-icons/ai";
 import { GrClose } from "react-icons/gr";
+import SearchPosts from "../search/SearchPosts";
+import SearchGames from "../search/SearchGames";
 import Modal from "../UI/modal/Modal";
-import Button from "../UI/Button/Button";
 
 import "./NavLinks.css";
-import { AuthContext } from "../../context/auth-context";
-import LoadingSpinner from "../UI/loadingSpinner/LoadingSpinner";
+import Button from "../UI/Button/Button";
 
 const NavLinks = ({ cl }) => {
   const auth = useContext(AuthContext);
-  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
-  const [searchedPosts, setSearchedPosts] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+  const [currentSearch, setCurrentSearch] = useState({
+    posts: true,
+    games: false,
+  });
 
   const showModalHandler = () => {
     setShowModal(true);
@@ -25,12 +26,6 @@ const NavLinks = ({ cl }) => {
 
   const closeModalHandler = () => {
     setShowModal(false);
-    setSearchedPosts("");
-  };
-
-  const onSearchItem = (postId) => {
-    navigate(`/posts/${postId}`);
-    closeModalHandler();
   };
 
   const modalHeader = (
@@ -40,59 +35,23 @@ const NavLinks = ({ cl }) => {
     </div>
   );
 
-  const searchPosts = async (search) => {
-    // const searchValue = event.target.value;
-    const searchValue = search;
-
-    setIsLoading(true);
-
-    const response = await fetch(
-      `http://localhost:5000/api/posts/search?q=${searchValue}`
-    );
-
-    const responseData = await response.json();
-
-    setSearchedPosts(responseData);
-    // console.log(searchedPosts);
-
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    searchPosts("");
-    // console.log("searchhed " + searchedPosts);
-  }, []);
-
   return (
     <>
       <Modal show={showModal} onCancel={closeModalHandler} header={modalHeader}>
-        <input
-          className={cl.search__input}
-          type="text"
-          onChange={(event) => searchPosts(event.target.value)}
+        <Button
+          label="Пости"
+          inverse={currentSearch.posts}
+          onClick={() => setCurrentSearch({ posts: true, games: false })}
         />
-        {/* {console.log(searchedPosts)} */}
-        {/* {isLoading && <LoadingSpinner className="center" />} */}
-        {!isLoading &&
-          searchedPosts &&
-          Array.isArray(searchedPosts) &&
-          searchedPosts.map((post) => (
-            <div
-              className={cl.search__item}
-              key={post._id}
-              onClick={() => onSearchItem(post._id)}
-            >
-              <div className={cl.search__item__title}>{post.title}</div>
-              <div className={cl.search__item__description}>
-                {post.description}
-              </div>
-            </div>
-            // }
-          ))}
-        {!isLoading && searchPosts && !Array.isArray(searchedPosts) && (
-          <div>{searchedPosts}</div>
-        )}
+        <Button
+          label="Ігри"
+          inverse={currentSearch.games}
+          onClick={() => setCurrentSearch({ posts: false, games: true })}
+        />
+        {currentSearch.posts && <SearchPosts closeModal={closeModalHandler} />}
+        {currentSearch.games && <SearchGames closeModal={closeModalHandler} />}
       </Modal>
+
       <ul className={cl.nav_links}>
         <input
           type="checkbox"
@@ -112,11 +71,11 @@ const NavLinks = ({ cl }) => {
           <li>
             <AiOutlineSearch className={cl.search} onClick={showModalHandler} />
           </li>
-          {auth.role === "ADMIN" && (
+          {/* {auth.role === "ADMIN" && (
             <li>
               <NavLink to="/uitest">UI-test</NavLink>
             </li>
-          )}
+          )} */}
           <li
             onClick={() =>
               localStorage.setItem(
@@ -154,6 +113,9 @@ const NavLinks = ({ cl }) => {
               </li>
               <li>
                 <NavLink to="/new-post">СТВОРИТИ ПОСТ</NavLink>
+              </li>
+              <li>
+                <NavLink to="/add-game">ДОДАТИ ГРУ</NavLink>
               </li>
             </>
           )}
