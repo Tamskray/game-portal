@@ -160,6 +160,57 @@ class GamesController {
 
     res.status(201).json(newGame);
   }
+
+  // UPDATE
+  async updateGame(req, res) {
+    // express validation results
+
+    const { title, description, developer, platforms, date } = req.body;
+    const gameId = req.params.gid;
+
+    let game;
+    try {
+      game = await Game.findById(gameId);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong, could not find a game", err });
+    }
+
+    if (req.file) {
+      game.image &&
+        fs.unlink(game.image, (err) => {
+          if (err) {
+            console.error("Failed to delete image:", err);
+          }
+        });
+    }
+
+    let imagePath;
+    if (req.file) {
+      imagePath = req.file.path;
+    } else {
+      imagePath = game.image;
+    }
+
+    game.title = title;
+    game.description = description;
+    game.developer = developer;
+    game.platforms = platforms;
+    game.date = date;
+    game.image = imagePath;
+
+    try {
+      await game.save();
+    } catch (err) {
+      return res.status(500).json({
+        message: "Something went wrong, could not update a game",
+        err,
+      });
+    }
+
+    res.status(200).json(game);
+  }
 }
 
 export default new GamesController();

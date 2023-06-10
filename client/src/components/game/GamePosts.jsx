@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PostList from "../posts/PostList";
 
-import "./GamePosts.css";
+import cl from "./GamePosts.module.css";
 
 const GamePosts = ({ postTitle }) => {
   const [searchedPosts, setSearchedPosts] = useState();
@@ -25,13 +25,13 @@ const GamePosts = ({ postTitle }) => {
   return (
     <>
       {searchedPosts && Array.isArray(searchedPosts) && (
-        <div className="searched__game__posts">
+        <div className={cl.searched__game__posts}>
           <h2>Пости пов'язані з {postTitle}</h2>
           <PostList items={searchedPosts} />
         </div>
       )}
       {searchPosts && !Array.isArray(searchedPosts) && (
-        <div className="searched__game__posts">
+        <div className={cl.searched__game__posts}>
           Не знайдено постів пов'язаних з {postTitle}
         </div>
       )}

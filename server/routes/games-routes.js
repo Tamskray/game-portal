@@ -13,6 +13,9 @@ router.get("/search", GamesController.searchGame);
 
 router.get("/:gid", GamesController.getGameById);
 
+router.use(checkAuth);
+
 router.post("/", fileUpload.single("image"), GamesController.createGame);
+router.patch("/:gid", fileUpload.single("image"), GamesController.updateGame);
 
 export default router;

@@ -7,6 +7,8 @@ import Button from "../components/UI/Button/Button";
 
 import cl from "../styles/PostsPage.module.css";
 import { useNavigate } from "react-router-dom";
+import Pagination from "../components/UI/pagination/Pagination";
+import PostItemSkeleton from "../components/posts/PostItemSkeleton";
 
 const PostsPage = ({ news, articles, reviews }) => {
   // localStorage.clear();
@@ -21,22 +23,19 @@ const PostsPage = ({ news, articles, reviews }) => {
 
   const fetchPosts = async (limit = 0, page = 0) => {
     try {
-      // const responseData = await sendRequest(
-      //   "http://localhost:5000/api/posts"
-      // );
       setIsLoading(true);
       let response;
       if (news) {
         response = await fetch(
-          `http://localhost:5000/api/posts/news?limit=${limit}&page=${page}`
+          `${process.env.REACT_APP_API_URL}/posts/news?limit=${limit}&page=${page}`
         );
       } else if (articles) {
         response = await fetch(
-          `http://localhost:5000/api/posts/articles?limit=${limit}&page=${page}`
+          `${process.env.REACT_APP_API_URL}/posts/articles?limit=${limit}&page=${page}`
         );
       } else if (reviews) {
         response = await fetch(
-          `http://localhost:5000/api/posts/reviews?limit=${limit}&page=${page}`
+          `${process.env.REACT_APP_API_URL}/posts/reviews?limit=${limit}&page=${page}`
         );
       }
 
@@ -75,7 +74,14 @@ const PostsPage = ({ news, articles, reviews }) => {
 
   return (
     <>
-      {isLoading && <LoadingSpinner />}
+      {isLoading && (
+        <>
+          <LoadingSpinner />
+          <PostItemSkeleton itemsNumber={3} />
+        </>
+      )}
+
+      {/* <PostItemSkeleton itemsNumber={1} /> */}
 
       {!isLoading && loadedPosts && (
         <>
@@ -86,24 +92,11 @@ const PostsPage = ({ news, articles, reviews }) => {
         </>
       )}
       {pagesArray && pagesArray.length > 1 && (
-        <div>
-          {pagesArray.map((p) =>
-            page === p ? (
-              <Button
-                key={p}
-                label={p + 1}
-                inverse
-                onClick={() => changePageHandler(p)}
-              />
-            ) : (
-              <Button
-                key={p}
-                label={p + 1}
-                onClick={() => changePageHandler(p)}
-              />
-            )
-          )}
-        </div>
+        <Pagination
+          pagesArray={pagesArray}
+          currentPage={page}
+          changePage={changePageHandler}
+        />
       )}
     </>
   );

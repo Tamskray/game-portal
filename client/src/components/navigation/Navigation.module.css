@@ -30,6 +30,18 @@
   font-size: 32px;
   margin-left: 10px;
   color: #fff;
+  display: flex;
+}
+
+.logo img {
+  width: 60px;
+  position: relative;
+  margin-right: 5px;
+  /* top: 5px; */
+}
+
+.logo img:hover {
+  opacity: 80%;
 }
 
 .menu {

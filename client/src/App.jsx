@@ -22,6 +22,9 @@ import UserPostsPage from "./pages/UserPostsPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import GamePage from "./pages/GamePage";
 import NewGamePage from "./pages/NewGamePage";
+import UpdateGamePage from "./pages/UpdateGamePage";
+
+import.meta.env.MODE;
 
 function App() {
   const { token, login, logout, userId, role } = useAuth();
@@ -91,6 +94,10 @@ function App() {
         {
           path: "/update-posts/:postId",
           element: <UpdatePostPage />,
+        },
+        {
+          path: "/update-game/:gameId",
+          element: <UpdateGamePage />,
         },
         {
           path: "/profile/:uid",

@@ -4,12 +4,15 @@ import { useParams } from "react-router-dom";
 import Carousel from "nuka-carousel";
 import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
 import GamePosts from "../components/game/GamePosts";
+import GameInfo from "../components/game/GameInfo";
+import GameAchievements from "../components/game/GameAchievements";
 import {
   renderCenterLeftControls,
   renderCenterRightControls,
 } from "../components/UI/carouselControls/CarouselControls";
 
-import "../styles/GamePage.css";
+import cl from "../styles/GamePage.module.css";
+
 const GamePage = () => {
   const params = useParams();
   const [loadedGame, setLoadedGame] = useState();
@@ -37,16 +40,16 @@ const GamePage = () => {
     fetchGame();
   }, [params.gameId]);
 
-  //   const [gameData, setGameData] = useGameInfo(loadedGame && loadedGame.title);
+  // const [gameData, setGameData] = useGameInfo(loadedGame && loadedGame.title);
 
-  console.log(loadedGame?.steamGameDetailInfo[loadedGame.steamAppId].data);
+  // console.log(loadedGame?.steamGameDetailInfo[loadedGame.steamAppId].data);
 
   return (
     <>
       {isLoading && <LoadingSpinner />}
       {!isLoading && loadedGame && (
-        <div>
-          <div className="header__image">
+        <>
+          <div className={cl.header__image}>
             <img
               src={
                 loadedGame?.steamGameDetailInfo[loadedGame.steamAppId].data
@@ -54,25 +57,10 @@ const GamePage = () => {
               }
             />
           </div>
-          <div className="game__info">
-            <div className="game__title">{loadedGame.game.title}</div>
-            <div className="game__developer">{loadedGame.game.developer}</div>
-            <div className="game__description">
-              <div className="game__description__item">
-                {loadedGame.game.description}
-              </div>
-              <div className="game__description__item">
-                <p>Платформи:</p>
-                {loadedGame.game.platforms}
-              </div>
-              <div className="game__description__item">
-                <p>Дата виходу: </p>
-                {loadedGame.game.date}
-              </div>
-            </div>
-          </div>
 
-          <div className="game__carousel">
+          <GameInfo cl={cl} loadedGame={loadedGame} />
+
+          <div className={cl.game__carousel}>
             <Carousel
               wrapAround
               autoplay
@@ -91,30 +79,11 @@ const GamePage = () => {
           </div>
 
           {loadedGame.achievements && (
-            <>
-              <h2>Досягення</h2>
-              <div className="achievement__container">
-                {loadedGame.achievements.game.availableGameStats.achievements.map(
-                  (item) => (
-                    <div key={item.name} className="achievement__item">
-                      <div>
-                        <img src={item.icon} alt={item.name} />
-                      </div>
-                      <div className="achievement__item__info">
-                        <div>{item.displayName}</div>
-                        <div className="achievement__item__description">
-                          {item.description || "Secret"}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                )}
-              </div>
-            </>
+            <GameAchievements cl={cl} loadedGame={loadedGame} />
           )}
 
           <GamePosts postTitle={loadedGame.game.title} />
-        </div>
+        </>
       )}
     </>
   );
