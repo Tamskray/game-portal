@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import { validationResult } from "express-validator";
 
 import Post from "../models/Post.js";
 import User from "../models/User.js";
@@ -236,7 +237,15 @@ class PostController {
   }
 
   // UPDATE
-  async updatePost(req, res, next) {
+  async updatePost(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
+        message: "Invalid inputs passed, please check your data",
+        errors,
+      });
+    }
+
     const { title, rubric, description, content } = req.body;
     const postId = req.params.pid;
 

@@ -64,7 +64,7 @@ const UpdatePostPage = () => {
           {
             title: {
               value: responseData.title,
-              isValid: false,
+              isValid: true,
             },
             rubric: {
               value: responseData.rubric,
@@ -72,7 +72,7 @@ const UpdatePostPage = () => {
             },
             description: {
               value: responseData.description,
-              isValid: false,
+              isValid: true,
             },
             image: {
               value: responseData.image,
@@ -120,16 +120,6 @@ const UpdatePostPage = () => {
         "PATCH",
         formData,
         { Authorization: "Bearer " + auth.token }
-        // JSON.stringify({
-        //   title: formState.inputs.title.value,
-        //   rubric: formState.inputs.rubric.value,
-        //   description: formState.inputs.description.value,
-        //   content: draftToHtml(convertToRaw(editorState.getCurrentContent())),
-        // }),
-        // {
-        //   Authorization: "Bearer " + auth.token,
-        //   "Content-Type": "application/json",
-        // }
       );
 
       navigate("/");
@@ -223,6 +213,7 @@ const UpdatePostPage = () => {
           imageUrl={
             loadedPost.image && "http://localhost:5000/" + loadedPost.image
           }
+          width="400px"
         />
 
         <Editor

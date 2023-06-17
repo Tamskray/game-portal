@@ -1,19 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useForm } from "../hooks/form-hook";
-import {
-  VALIDATOR_REQUIRE,
-  VALIDATOR_EMAIL,
-  VALIDATOR_MINLENGTH,
-} from "../utils/validators";
-
-import Input from "../components/UI/input/Input";
-import Button from "../components/UI/Button/Button";
-import ImageUpload from "../components/image-upload/ImageUpload";
-
-import { Transition } from "react-transition-group";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../context/auth-context";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useHttpClient } from "../hooks/http-hook";
+import { useForm } from "../hooks/form-hook";
+import {
+  VALIDATOR_EMAIL,
+  VALIDATOR_MINLENGTH,
+  VALIDATOR_MAXLENGTH,
+} from "../utils/validators";
+
+import ImageUpload from "../components/image-upload/ImageUpload";
+import { Transition } from "react-transition-group";
+import Input from "../components/UI/input/Input";
+import Button from "../components/UI/Button/Button";
+import ServerError from "../components/UI/serverError/ServerError";
+import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
 
 const LoginPage = () => {
   const auth = useContext(AuthContext);
@@ -39,6 +40,7 @@ const LoginPage = () => {
   );
 
   const switchModeHandler = () => {
+    clearError();
     if (!isLoginMode) {
       setFormData(
         {
@@ -76,7 +78,7 @@ const LoginPage = () => {
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users/login",
+          `${process.env.REACT_APP_API_URL}/users/login`,
           "POST",
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -106,18 +108,9 @@ const LoginPage = () => {
         // console.log(formState.inputs.image.value);
 
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users/signup",
+          `${process.env.REACT_APP_API_URL}/users/signup`,
           "POST",
           formData
-          // JSON.stringify({
-          //   username: formState.inputs.username.value,
-          //   email: formState.inputs.email.value,
-          //   password: formState.inputs.password.value,
-          // }),
-          // {
-          //   "Content-Type": "application/json",
-          // }
-          // formData
         );
 
         auth.login(responseData.userId, responseData.token, responseData.role);
@@ -134,7 +127,7 @@ const LoginPage = () => {
       <Transition in={isLoginMode} timeout={300}>
         {(state) => (
           <div className={`authentication place-form ${state}`}>
-            {/* {isLoading && <LoadingSpinner asOverlay />} */}
+            {isLoading && <LoadingSpinner />}
             <form onSubmit={loginSubmitHandler}>
               {!isLoginMode && (
                 <Input
@@ -142,8 +135,8 @@ const LoginPage = () => {
                   id="username"
                   type="text"
                   label="Нікнейм"
-                  validators={[VALIDATOR_REQUIRE()]}
-                  errorText="Введіть нікнейм"
+                  validators={[VALIDATOR_MINLENGTH(3), VALIDATOR_MAXLENGTH(24)]}
+                  errorText="Нікнейм має бути від 3 до 24 символів"
                   onInput={inputHandler}
                 />
               )}
@@ -163,15 +156,17 @@ const LoginPage = () => {
                 validators={[VALIDATOR_EMAIL()]}
                 errorText="Введіть вірну електронну пошту"
                 onInput={inputHandler}
+                clearError={clearError}
               />
               <Input
                 element="input"
                 id="password"
                 type="password"
                 label="Пароль"
-                validators={[VALIDATOR_MINLENGTH(4)]}
-                errorText="Введіть пароль (min. 4 characters)"
+                validators={[VALIDATOR_MINLENGTH(4), VALIDATOR_MAXLENGTH(24)]}
+                errorText="Пароль має бути від 4 до 24 символів"
                 onInput={inputHandler}
+                clearError={clearError}
               />
               <Button
                 type="submit"
@@ -180,6 +175,7 @@ const LoginPage = () => {
                 disabled={!formState.isValid}
               />
             </form>
+            {error && <ServerError error={error} />}
             <Button
               label={`Перейти до ${isLoginMode ? "реєстрації" : "авторизації"}`}
               onClick={switchModeHandler}

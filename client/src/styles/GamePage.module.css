@@ -54,6 +54,7 @@
   background-color: rgb(51, 50, 50);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 5px;
+  width: 97%;
 }
 
 .game__description__item {
@@ -78,6 +79,10 @@
   position: relative;
   left: 50%;
   transform: translate(-50%, 0%);
+}
+
+.achievement__container img {
+  max-width: 80px;
 }
 
 .achievement__container::-webkit-scrollbar {

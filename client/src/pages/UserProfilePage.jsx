@@ -9,6 +9,7 @@ import cl from "../styles/UserProfile.module.css";
 import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
 import CommentsList from "../components/posts/comments/CommentsList";
 import Button from "../components/UI/Button/Button";
+import Pagination from "../components/UI/pagination/Pagination";
 
 const UserProfilePage = () => {
   const params = useParams();
@@ -31,7 +32,7 @@ const UserProfilePage = () => {
       setIsLoading(true);
 
       const response = await fetch(
-        `http://localhost:5000/api/users/profile/${params.uid}?limit=${limit}&page=${page}`,
+        `${process.env.REACT_APP_API_URL}/users/profile/${params.uid}?limit=${limit}&page=${page}`,
         {
           headers: {
             Authorization: "Bearer " + auth.token,
@@ -106,24 +107,11 @@ const UserProfilePage = () => {
             )}
 
             {pagesArray && pagesArray.length > 1 && (
-              <div>
-                {pagesArray.map((p) =>
-                  page === p ? (
-                    <Button
-                      key={p}
-                      label={p + 1}
-                      inverse
-                      onClick={() => changePageHandler(p)}
-                    />
-                  ) : (
-                    <Button
-                      key={p}
-                      label={p + 1}
-                      onClick={() => changePageHandler(p)}
-                    />
-                  )
-                )}
-              </div>
+              <Pagination
+                pagesArray={pagesArray}
+                currentPage={page}
+                changePage={changePageHandler}
+              />
             )}
           </>
         )}

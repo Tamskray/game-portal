@@ -5,6 +5,7 @@ import { getPageCount, getPagesArray } from "../utils/pages";
 
 import Button from "../components/UI/Button/Button";
 import { useParams } from "react-router-dom";
+import Pagination from "../components/UI/pagination/Pagination";
 
 const UserPostsPage = () => {
   const params = useParams();
@@ -19,9 +20,6 @@ const UserPostsPage = () => {
 
   const fetchPosts = async (limit = 0, page = 0) => {
     try {
-      // const responseData = await sendRequest(
-      //   "http://localhost:5000/api/posts"
-      // );
       setIsLoading(true);
 
       const response = await fetch(
@@ -51,7 +49,7 @@ const UserPostsPage = () => {
   const fetchCreator = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/${params.userId}`
+        `${process.env.REACT_APP_API_URL}/users/${params.userId}`
       );
       const responseData = await response.json();
       setLoadedCreator(responseData);
@@ -81,31 +79,18 @@ const UserPostsPage = () => {
     <>
       {loadedCreator && (
         <h1 className="posts__page__title">
-          Пости користувача {loadedCreator.username}
+          Публікації автора {loadedCreator.username}
         </h1>
       )}
 
       {isLoading && <LoadingSpinner />}
       {!isLoading && loadedPosts && <PostList items={loadedPosts} />}
-      {pagesArray && (
-        <div>
-          {pagesArray.map((p) =>
-            page === p ? (
-              <Button
-                key={p}
-                label={p + 1}
-                inverse
-                onClick={() => changePageHandler(p)}
-              />
-            ) : (
-              <Button
-                key={p}
-                label={p + 1}
-                onClick={() => changePageHandler(p)}
-              />
-            )
-          )}
-        </div>
+      {pagesArray && pagesArray.length > 1 && (
+        <Pagination
+          pagesArray={pagesArray}
+          currentPage={page}
+          changePage={changePageHandler}
+        />
       )}
     </>
   );

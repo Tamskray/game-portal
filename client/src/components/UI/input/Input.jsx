@@ -37,6 +37,7 @@ const Input = ({
   onInput,
   validators,
   withoutErrors,
+  clearError,
 }) => {
   const [inputState, dispatch] = useReducer(inputReducer, {
     value: initialValue || "",
@@ -48,6 +49,7 @@ const Input = ({
 
   useEffect(() => {
     onInput(id, value, isValid);
+    clearError && clearError();
   }, [id, value, isValid, onInput]);
 
   const changeHandler = (e) => {

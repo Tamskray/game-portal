@@ -14,9 +14,6 @@ const userSchema = new mongoose.Schema({
       ref: "Post",
     },
   ],
-  // posts, ref Post
-  // comments
-  // mb likes
 });
 
 export default mongoose.model("User", userSchema);

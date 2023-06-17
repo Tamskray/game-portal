@@ -7,7 +7,6 @@ const postSchema = new mongoose.Schema({
   description: { type: String, required: true },
   creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
   likes: { type: Map, of: Boolean },
-  // comments: { type: Array, default: [] },
   comments: [
     {
       type: mongoose.Types.ObjectId,
@@ -18,7 +17,6 @@ const postSchema = new mongoose.Schema({
   ],
   date: { type: Date, default: Date.now },
   image: { type: String, required: false },
-  //   imageTitle
 });
 
 export default mongoose.model("Post", postSchema);

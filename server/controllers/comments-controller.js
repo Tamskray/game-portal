@@ -141,7 +141,7 @@ class CommentController {
     res.status(201).json(newComment);
   }
 
-  async deleteComment(req, res, next) {
+  async deleteComment(req, res) {
     const commentId = req.params.cid;
 
     let comment;
@@ -152,6 +152,12 @@ class CommentController {
         return res
           .status(404)
           .json({ message: "Could not find comment for this id" });
+      }
+
+      if (comment.creatorId.toString() !== req.userData.userId) {
+        return res
+          .status(403)
+          .json({ message: "You are not allowed to delete this comment" });
       }
 
       comment = await Comment.findByIdAndDelete(commentId);

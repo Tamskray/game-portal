@@ -30,7 +30,7 @@ const NavLinks = ({ cl }) => {
 
   const modalHeader = (
     <div className={cl.modal__header}>
-      <div>Пошук постів</div>
+      <div>Пошук на сайті</div>
       <GrClose className={cl.close__icon} onClick={closeModalHandler} />
     </div>
   );

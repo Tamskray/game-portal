@@ -9,8 +9,8 @@ import * as fs from "fs";
 
 const router = new Router();
 
-// router.get("/", checkRole(["USER", "ADMIN"]), UserController.getUsers);
-router.get("/", UserController.getUsers);
+// router.get("/", UserController.getUsers);
+router.get("/", checkRole(["ADMIN", "OWNER"]), UserController.getUsers);
 
 router.get("/:uid", UserController.getUserById);
 
@@ -28,12 +28,14 @@ router.post(
   //   }
   // },
   [
-    check("username", "Username must contain at least 3 characters").isLength({
+    check("username", "Username must be from 3 to 18 characters").isLength({
       min: 3,
+      max: 24,
     }),
     check("email", "Email is not valid").normalizeEmail().isEmail(),
-    check("password", "Password must contain at least 4 characters").isLength({
+    check("password", "Password must be from 4 to 18 characters").isLength({
       min: 4,
+      max: 24,
     }),
   ],
   UserController.signup

@@ -6,11 +6,12 @@ import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
 import Button from "../components/UI/Button/Button";
 
 import cl from "../styles/PostsPage.module.css";
+
 import { useNavigate } from "react-router-dom";
 import Pagination from "../components/UI/pagination/Pagination";
 import PostItemSkeleton from "../components/posts/PostItemSkeleton";
 
-const PostsPage = ({ news, articles, reviews }) => {
+const PostsPage = ({ rubric }) => {
   // localStorage.clear();
   const navigate = useNavigate();
   const storedData = JSON.parse(localStorage.getItem("sessionData"));
@@ -24,20 +25,9 @@ const PostsPage = ({ news, articles, reviews }) => {
   const fetchPosts = async (limit = 0, page = 0) => {
     try {
       setIsLoading(true);
-      let response;
-      if (news) {
-        response = await fetch(
-          `${process.env.REACT_APP_API_URL}/posts/news?limit=${limit}&page=${page}`
-        );
-      } else if (articles) {
-        response = await fetch(
-          `${process.env.REACT_APP_API_URL}/posts/articles?limit=${limit}&page=${page}`
-        );
-      } else if (reviews) {
-        response = await fetch(
-          `${process.env.REACT_APP_API_URL}/posts/reviews?limit=${limit}&page=${page}`
-        );
-      }
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/posts/${rubric}?limit=${limit}&page=${page}`
+      );
 
       const responseData = await response.json();
 
@@ -62,7 +52,7 @@ const PostsPage = ({ news, articles, reviews }) => {
     // fetchPosts(limit, page);
     console.clear();
     fetchPosts(limit, page);
-  }, [news, articles, reviews]);
+  }, [rubric]);
 
   const changePageHandler = (page) => {
     setPage(page);

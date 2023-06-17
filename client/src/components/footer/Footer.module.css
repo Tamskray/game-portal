@@ -1,0 +1,32 @@
+.footer__container {
+  /* margin-top: 18rem; */
+  background-color: #1b1919;
+  /* background-image: url("../../assets/polygon-scatter-haikei.svg");
+  background-repeat: no-repeat;
+  background-size: cover; */
+
+  padding: 30px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  max-height: 10px;
+}
+
+.footer__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.footer__git__icon {
+  margin-left: 1rem;
+  position: relative;
+  bottom: 2px;
+  font-size: 35px;
+  cursor: pointer;
+  transition: 0.5s ease;
+}
+
+.footer__git__icon:hover {
+  opacity: 70%;
+}

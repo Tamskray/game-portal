@@ -13,35 +13,37 @@ const generateAccessToken = (userId, email, roles) => {
     return Jwt.sign(payload, process.env.JWT_KEY, { expiresIn: "1h" });
   } catch (err) {
     console.log(err);
-    // throw new Error("Error");
+    // throw new Error(err);
   }
 };
 
 class UserController {
-  async getUsers(req, res, next) {
+  // GET ALL USERS
+  async getUsers(req, res) {
     try {
-      // const users = await User.find({}, "-password");
-      const users = await User.find();
+      const users = await User.find({}, "-password");
+      // const users = await User.find();
 
       // just check
-      const formattedUsers = users.map(({ id, username }) => {
-        return { id, username };
-      });
+      // const formattedUsers = users.map(({ id, username }) => {
+      //   return { id, username };
+      // });
 
-      res.status(200).json(formattedUsers);
+      res.status(200).json(users);
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
   }
 
-  async getUserById(req, res, next) {
+  // GET USER BY ID
+  async getUserById(req, res) {
     try {
       const userId = req.params.uid;
       const user = await User.findById(userId);
 
       res.status(200).json({
         userId: user.id,
-        email: user.email,
+        // email: user.email,
         username: user.username,
         posts: user.posts,
         image: user.image || null,
@@ -51,6 +53,7 @@ class UserController {
     }
   }
 
+  // USER PROFILE INFO
   async getUserProfileInfoById(req, res) {
     const userId = req.params.uid;
     const { limit, page } = req.query;
@@ -84,7 +87,8 @@ class UserController {
     });
   }
 
-  async signup(req, res, next) {
+  // SIGNUP
+  async signup(req, res) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
@@ -176,7 +180,8 @@ class UserController {
     });
   }
 
-  async login(req, res, next) {
+  // LOGIN
+  async login(req, res) {
     const { email, password } = req.body;
 
     let existingUser;
@@ -190,7 +195,7 @@ class UserController {
 
     if (!existingUser) {
       return res.status(403).json({
-        message: `Invalid credentials, user with ${email} not found, could not log you in.`,
+        message: `Невірні облікові дані, користувача з поштою ${email} не знайдено, не вдалося увійти`,
       });
     }
 
@@ -206,8 +211,7 @@ class UserController {
 
     if (!isValidPassword) {
       return res.status(403).json({
-        message:
-          "Invalid credentials, password not correct, could not log you in",
+        message: "Невірні облікові дані, невірний пароль, не вдалося увійти",
       });
     }
 

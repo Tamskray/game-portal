@@ -34,6 +34,11 @@
   /* padding: 2rem; */
   text-align: center;
   background-color: #242424;
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .test {
@@ -45,6 +50,10 @@
 body {
   margin: 0;
   /* background: rgb(126, 125, 125); */
+  background-image: url("../src/assets/layered-waves-haikei3.svg");
+
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 ::-webkit-scrollbar {
@@ -60,6 +69,11 @@ main {
   background-color: #242424;
   padding: 0;
   margin: 0;
+  flex: 1;
+}
+
+footer {
+  margin-top: 5rem;
 }
 
 .place-form {
@@ -68,7 +82,7 @@ main {
   margin: 0 auto;
   padding: 1rem;
   width: 90%;
-  max-width: 40rem;
+  max-width: 80rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 6px;
   background: rgb(54, 54, 54);

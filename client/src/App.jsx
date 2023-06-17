@@ -60,15 +60,15 @@ function App() {
         // },
         {
           path: "/news",
-          element: <PostsPage news />,
+          element: <PostsPage rubric="news" />,
         },
         {
           path: "/articles",
-          element: <PostsPage articles />,
+          element: <PostsPage rubric="articles" />,
         },
         {
           path: "/reviews",
-          element: <PostsPage reviews />,
+          element: <PostsPage rubric="reviews" />,
         },
         {
           path: "/new-post",

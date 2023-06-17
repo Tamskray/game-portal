@@ -13,6 +13,8 @@ import {
 } from "../components/UI/carouselControls/CarouselControls";
 
 import cl from "../styles/PostsPage.module.css";
+import PostItemSkeleton from "../components/posts/PostItemSkeleton";
+import Pagination from "../components/UI/pagination/Pagination";
 
 const HomePage = () => {
   // localStorage.clear();
@@ -118,32 +120,24 @@ const HomePage = () => {
           </Carousel>
         </div>
       )}
-      {isLoading && <LoadingSpinner />}
+      {isLoading && (
+        <>
+          <LoadingSpinner />
+          <PostItemSkeleton itemsNumber={3} />
+        </>
+      )}
       {!isLoading && loadedPosts && (
         <>
-          <h1 className="posts__page__title">&#9632; Останні пости</h1>
+          <h1 className="posts__page__title">&#9632; Останні публікації</h1>
           <PostList items={loadedPosts} />{" "}
         </>
       )}
-      {pagesArray && (
-        <div>
-          {pagesArray.map((p) =>
-            page === p ? (
-              <Button
-                key={p}
-                label={p + 1}
-                inverse
-                onClick={() => changePageHandler(p)}
-              />
-            ) : (
-              <Button
-                key={p}
-                label={p + 1}
-                onClick={() => changePageHandler(p)}
-              />
-            )
-          )}
-        </div>
+      {pagesArray && pagesArray.length > 1 && (
+        <Pagination
+          pagesArray={pagesArray}
+          currentPage={page}
+          changePage={changePageHandler}
+        />
       )}
     </>
   );
