@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { VscHeartFilled } from "react-icons/vsc";
 import Modal from "../UI/modal/Modal";
 import "./PostLike.css";
-import Button from "../UI/Button/Button";
+import Button from "../UI/button/Button";
 
 const PostLike = ({ likes, postId }) => {
   const auth = useContext(AuthContext);

@@ -23,6 +23,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 import GamePage from "./pages/GamePage";
 import NewGamePage from "./pages/NewGamePage";
 import UpdateGamePage from "./pages/UpdateGamePage";
+import UsersPage from "./pages/UsersPage";
 
 import.meta.env.MODE;
 
@@ -51,6 +52,10 @@ function App() {
           element: token ? <UITestPage /> : <Navigate to="/" />,
         },
         {
+          path: "/users",
+          element: <UsersPage />,
+        },
+        {
           path: "/login",
           element: <LoginPage />,
         },
@@ -72,12 +77,22 @@ function App() {
         },
         {
           path: "/new-post",
-          element: role === "ADMIN" ? <NewPostPage /> : <Navigate to="/" />,
+          element:
+            role === "ADMIN" || role === "OWNER" ? (
+              <NewPostPage />
+            ) : (
+              <Navigate to="/" />
+            ),
         },
         {
           path: "/add-game",
           // element: <NewGamePage />,
-          element: role === "ADMIN" ? <NewGamePage /> : <Navigate to="/" />,
+          element:
+            role === "ADMIN" || role === "OWNER" ? (
+              <NewGamePage />
+            ) : (
+              <Navigate to="/" />
+            ),
         },
         {
           path: "/posts/:postId",

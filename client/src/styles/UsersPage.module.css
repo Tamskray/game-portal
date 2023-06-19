@@ -1,0 +1,71 @@
+.users__container {
+  padding: 10px;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.user__item {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: rgb(73, 73, 73);
+  text-align: start;
+  border-radius: 10px;
+}
+
+.user__item:hover {
+  background-color: rgb(58, 58, 58);
+}
+
+.username {
+  width: 15rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.username:hover {
+  color: #18cf00;
+}
+
+.email {
+  width: 27rem;
+}
+
+.role__user {
+  width: 5rem;
+}
+
+.role__admin {
+  width: 5rem;
+  color: #6b9bda;
+}
+
+.search__input {
+  color: black;
+  width: 70%;
+  max-width: 96%;
+  font: inherit;
+  border: 1px solid #ccc;
+  background: #f8f8f8;
+  padding: 0.15rem 0.25rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.modal__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.close__icon {
+  cursor: pointer;
+}
+
+.close__icon:hover {
+  opacity: 50%;
+}

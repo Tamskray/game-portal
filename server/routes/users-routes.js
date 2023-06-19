@@ -10,7 +10,7 @@ import * as fs from "fs";
 const router = new Router();
 
 // router.get("/", UserController.getUsers);
-router.get("/", checkRole(["ADMIN", "OWNER"]), UserController.getUsers);
+router.get("/", UserController.getUsers);
 
 router.get("/:uid", UserController.getUserById);
 
@@ -40,6 +40,11 @@ router.post(
   ],
   UserController.signup
 );
+
 router.post("/login", UserController.login);
+
+router.patch("/role/:uid", UserController.changeUserRole);
+
+router.delete("/:uid", UserController.deleteUser);
 
 export default router;

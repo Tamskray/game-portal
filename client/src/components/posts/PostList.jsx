@@ -5,9 +5,7 @@ const PostList = ({ items }) => {
   if (items.length === 0) {
     return (
       <div className="center">
-        {/* <Card> */}
         <h2>Пости не знайдено</h2>
-        {/* </Card> */}
       </div>
     );
   }

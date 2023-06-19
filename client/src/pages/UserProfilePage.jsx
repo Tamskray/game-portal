@@ -10,6 +10,9 @@ import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
 import CommentsList from "../components/posts/comments/CommentsList";
 import Button from "../components/UI/Button/Button";
 import Pagination from "../components/UI/pagination/Pagination";
+import PostItemSkeleton from "../components/posts/PostItemSkeleton";
+import Modal from "../components/UI/modal/Modal";
+import UpdateUserProfile from "../components/users/UpdateUserProfile";
 
 const UserProfilePage = () => {
   const params = useParams();
@@ -23,9 +26,8 @@ const UserProfilePage = () => {
 
   const [totalPages, setTotalPages] = useState("");
   const pagesArray = getPagesArray(totalPages);
-  //   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
-  //   console.log(localStorage.getItem("userData", "token"));
+  const [showUpdateUserModal, setShowUpdateUserModal] = useState(false);
 
   const fetchUser = async (limit = 0, page = 0) => {
     try {
@@ -72,50 +74,80 @@ const UserProfilePage = () => {
     localStorage.setItem("sessionData", JSON.stringify({ postPage: page }));
   };
 
+  const closeUpdateUserModalHandler = () => {
+    setShowUpdateUserModal(false);
+  };
+
+  const showUpdateUserModalHandler = () => {
+    setShowUpdateUserModal(true);
+  };
+
   return (
     <>
-      {/* {isLoading && <LoadingSpinner />} */}
-      <div>
-        {loadedUser && (
-          <>
-            <div className={cl.container}>
-              <div className={cl.user__image}>
-                <Avatar
-                  image={
-                    loadedUser.image && loadedUser.image
-                      ? "http://localhost:5000/" + loadedUser.image
-                      : "https://external-preview.redd.it/s40RczXEeh8Q0z6sc-u8cFFCpYdoUsjOpY9-Z-CDjms.jpg?auto=webp&s=7b5c42fc8df7cb5730705fd3e70a65f51750056e"
-                  }
-                  alt={loadedUser.username}
-                />
-              </div>
-              <div className={cl.user__info}>
-                <h3>{loadedUser.username}</h3>
-                <h3>{loadedUser.email}</h3>
-                <div>
-                  <Button label="Редагувати дані" />
+      {loadedUser && (
+        <>
+          <Modal
+            show={showUpdateUserModal}
+            onCancel={closeUpdateUserModalHandler}
+            header={`Редагування даних ${loadedUser.username}`}
+          >
+            <UpdateUserProfile
+              user={loadedUser}
+              closeModal={closeUpdateUserModalHandler}
+            />
+          </Modal>
+          <div>
+            {loadedUser && (
+              <>
+                <div className={cl.container}>
+                  <div className={cl.user__image}>
+                    <Avatar
+                      image={
+                        loadedUser.image && loadedUser.image
+                          ? process.env.REACT_APP_URL + loadedUser.image
+                          : "https://external-preview.redd.it/s40RczXEeh8Q0z6sc-u8cFFCpYdoUsjOpY9-Z-CDjms.jpg?auto=webp&s=7b5c42fc8df7cb5730705fd3e70a65f51750056e"
+                      }
+                      alt={loadedUser.username}
+                    />
+                  </div>
+                  <div className={cl.user__info}>
+                    <h3>{loadedUser.username}</h3>
+                    <h3>{loadedUser.email}</h3>
+                    <div>
+                      <Button
+                        label="Редагувати дані"
+                        onClick={showUpdateUserModalHandler}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* <hr /> */}
-            <h3>Активність</h3>
-            {isLoading ? (
-              <LoadingSpinner />
-            ) : (
-              <CommentsList items={loadedUser.comments} activity />
-            )}
+                {/* <hr /> */}
+                <h3>Активність</h3>
+                {!loadedUser.comments.length && (
+                  <h2>{`${loadedUser.username} не проявляв ніякої активності :(`}</h2>
+                )}
+                {isLoading ? (
+                  <>
+                    <LoadingSpinner />
+                    <PostItemSkeleton itemsNumber={2} />
+                  </>
+                ) : (
+                  <CommentsList items={loadedUser.comments} activity />
+                )}
 
-            {pagesArray && pagesArray.length > 1 && (
-              <Pagination
-                pagesArray={pagesArray}
-                currentPage={page}
-                changePage={changePageHandler}
-              />
+                {pagesArray && pagesArray.length > 1 && (
+                  <Pagination
+                    pagesArray={pagesArray}
+                    currentPage={page}
+                    changePage={changePageHandler}
+                  />
+                )}
+              </>
             )}
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </>
   );
 };

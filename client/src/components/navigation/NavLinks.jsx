@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/auth-context";
 
@@ -9,7 +9,7 @@ import SearchGames from "../search/SearchGames";
 import Modal from "../UI/modal/Modal";
 
 import "./NavLinks.css";
-import Button from "../UI/Button/Button";
+import Button from "../UI/button/Button";
 
 const NavLinks = ({ cl }) => {
   const auth = useContext(AuthContext);
@@ -19,6 +19,18 @@ const NavLinks = ({ cl }) => {
     posts: true,
     games: false,
   });
+
+  const [isAccessed, setIsAccessed] = useState(false);
+
+  useEffect(() => {
+    if (auth.role === "ADMIN" || auth.role === "OWNER") {
+      setIsAccessed(true);
+      // console.log("ROLEE " + auth.role);
+    } else {
+      setIsAccessed(false);
+      // console.log("ROLEE " + auth.role);
+    }
+  }, [auth.isLoggedIn]);
 
   const showModalHandler = () => {
     setShowModal(true);
@@ -65,7 +77,7 @@ const NavLinks = ({ cl }) => {
         <div
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className={`${cl.menu} menu ${isMenuOpen && "open"} ${
-            auth.role === "ADMIN" && cl.menu__admin
+            isAccessed && cl.menu__admin
           }`}
         >
           <li>
@@ -106,7 +118,7 @@ const NavLinks = ({ cl }) => {
           >
             <NavLink to="/reviews">ОГЛЯДИ</NavLink>
           </li>
-          {auth.isLoggedIn && auth.role === "ADMIN" && (
+          {auth.isLoggedIn && isAccessed && (
             <>
               <li>
                 <NavLink to={`/${auth.userId}/posts`}>МОЇ ПОСТИ</NavLink>
@@ -125,6 +137,13 @@ const NavLinks = ({ cl }) => {
               <NavLink to="/login">УВІЙТИ</NavLink>
             </li>
           )}
+
+          {auth.role === "OWNER" && (
+            <li>
+              <NavLink to="/users">КОРИСТУВАЧІ</NavLink>
+            </li>
+          )}
+
           {auth.isLoggedIn && (
             <li
               onClick={() =>
@@ -137,6 +156,7 @@ const NavLinks = ({ cl }) => {
               <NavLink to={`/profile/${auth.userId}`}>ПРОФІЛЬ</NavLink>
             </li>
           )}
+
           {auth.isLoggedIn && (
             <li>
               <button

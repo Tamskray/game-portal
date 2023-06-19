@@ -1,0 +1,41 @@
+.creator__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 2rem auto;
+  padding: 1rem;
+  width: 90%;
+  background-image: url("../assets/circle-scatter-haikei4.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 15px;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+
+.creator__header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  font-size: 48px;
+  text-shadow: #474747 3px 5px 2px;
+}
+
+.creator__posts__info {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 36px;
+}
+
+.creator__posts__info span {
+  margin-right: 2rem;
+}

@@ -3,7 +3,7 @@ import { getPageCount, getPagesArray } from "../utils/pages";
 
 import PostList from "../components/posts/PostList";
 import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
-import Button from "../components/UI/Button/Button";
+import Button from "../components/UI/button/Button";
 
 import cl from "../styles/PostsPage.module.css";
 
@@ -40,7 +40,7 @@ const PostsPage = ({ rubric }) => {
 
       console.log(responseData);
 
-      setLoadedPosts(responseData);
+      setLoadedPosts(responseData.posts);
       setIsLoading(false);
     } catch (err) {
       console.log(err);

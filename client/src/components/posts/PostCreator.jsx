@@ -3,6 +3,7 @@ import { useHttpClient } from "../../hooks/http-hook";
 
 import "./PostCreator.css";
 import Avatar from "../UI/avatar/Avatar";
+import { useNavigate } from "react-router-dom";
 
 const monthNames = [
   "Січня",
@@ -20,6 +21,7 @@ const monthNames = [
 ];
 
 const PostCreator = ({ creatorId, date, avatarWidth, avatarHeight }) => {
+  const navigate = useNavigate();
   const [loadedCreator, setLoadedCreator] = useState();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
@@ -47,7 +49,10 @@ const PostCreator = ({ creatorId, date, avatarWidth, avatarHeight }) => {
     <>
       {!isLoading && loadedCreator && (
         <div>
-          <div className="creator__image">
+          <div
+            className="creator__image"
+            onClick={() => navigate(`/${creatorId}/posts`)}
+          >
             <Avatar
               image="https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
               alt={loadedCreator.username}

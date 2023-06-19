@@ -1,11 +1,11 @@
 import * as fs from "fs";
-
 import User from "../models/User.js";
 import Comment from "../models/Comment.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
 import Role from "../models/Role.js";
+import Post from "../models/Post.js";
 
 const generateAccessToken = (userId, email, roles) => {
   try {
@@ -18,18 +18,22 @@ const generateAccessToken = (userId, email, roles) => {
 };
 
 class UserController {
-  // GET ALL USERS
+  // GET ALL USERS FOR OWNER
   async getUsers(req, res) {
     try {
-      const users = await User.find({}, "-password");
-      // const users = await User.find();
+      const userToken = req.query.token;
 
-      // just check
-      // const formattedUsers = users.map(({ id, username }) => {
-      //   return { id, username };
-      // });
-
-      res.status(200).json(users);
+      const decodedToken = Jwt.verify(userToken, process.env.JWT_KEY);
+      if (decodedToken.roles[0] === "OWNER") {
+        // const users = await User.find({}, "-password");
+        const users = await User.find(
+          { roles: { $ne: "OWNER" } },
+          "-password"
+        ).sort({ roles: 1 });
+        res.status(200).json(users);
+      } else {
+        return res.status(403).json({ message: "You don't have access" });
+      }
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
@@ -228,6 +232,67 @@ class UserController {
       token: token,
       role: existingUser.roles[0],
     });
+  }
+
+  async changeUserRole(req, res) {
+    try {
+      const userId = req.params.uid;
+      const { newRole } = req.body;
+
+      console.log(newRole);
+
+      const existingUser = await User.findById(userId);
+
+      if (!existingUser) {
+        return res.status(404).json({
+          message: `User with provided Id not found`,
+        });
+      }
+
+      existingUser.roles = [newRole];
+
+      await existingUser.save();
+
+      return res.status(200).json({ message: "Role updated succesfully" });
+    } catch (err) {
+      return res.status(500).json({ message: err });
+    }
+  }
+
+  async deleteUser(req, res) {
+    const userId = req.params.uid;
+
+    let user;
+    try {
+      user = await User.findById(userId);
+
+      const newCreator = await User.findById("64909f9c879bf0b06b4afc4a");
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ message: "Could not find user for this id" });
+      }
+
+      // hardcode id, beacause this is special created user for this
+      await Post.updateMany(
+        { creator: userId },
+        { $set: { creator: "64909f9c879bf0b06b4afc4a" } }
+      );
+
+      newCreator.posts = newCreator.posts.concat(user.posts);
+      await newCreator.save();
+
+      await Comment.deleteMany({ creatorId: userId });
+
+      await User.findByIdAndDelete(userId);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong, could not find a user" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
   }
 }
 

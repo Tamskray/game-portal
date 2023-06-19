@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import PostList from "../components/posts/PostList";
 import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
-import Button from "../components/UI/Button/Button";
+import Button from "../components/UI/button/Button";
 
 import Carousel from "nuka-carousel";
 import {
@@ -44,9 +44,6 @@ const HomePage = () => {
 
   const fetchPosts = async (limit = 0, page = 0) => {
     try {
-      // const responseData = await sendRequest(
-      //   "http://localhost:5000/api/posts"
-      // );
       setIsLoading(true);
 
       const response = await fetch(
@@ -64,7 +61,7 @@ const HomePage = () => {
 
       console.log(responseData);
 
-      setLoadedPosts(responseData);
+      setLoadedPosts(responseData.posts);
       setIsLoading(false);
     } catch (err) {
       console.log(err);

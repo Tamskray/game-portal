@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useHttpClient } from "../../hooks/http-hook";
-import Button from "../UI/Button/Button";
+import Button from "../UI/button/Button";
 import { AuthContext } from "../../context/auth-context";
 import LoadingSpinner from "../UI/loadingSpinner/LoadingSpinner";
 import { Link, useNavigate } from "react-router-dom";

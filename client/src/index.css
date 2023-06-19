@@ -137,11 +137,12 @@ footer {
 select {
   position: relative;
   display: block;
-  width: 100%;
+  width: 50%;
   margin: 0 auto;
   font-size: 18px;
   color: #242424;
   background-color: #fff;
+  margin-bottom: 1rem;
 }
 
 option {

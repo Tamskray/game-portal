@@ -2,6 +2,7 @@
   width: 4rem;
   height: 4rem;
   margin-right: 1rem;
+  cursor: pointer;
 }
 
 .creator__name {

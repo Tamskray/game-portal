@@ -18,6 +18,7 @@ class PostController {
       // const users = await User.find({}, "-password");
       let posts;
       let totalCount;
+      let likesCount = 0;
       if (req._parsedUrl.pathname === "/") {
         console.log("all posts");
         posts = await Post.find()
@@ -34,6 +35,13 @@ class PostController {
           .skip(pageSize * pageNumber);
 
         totalCount = await Post.countDocuments({ creator: userId });
+
+        posts.forEach((post) => {
+          // console.log(post.likes.size);
+          likesCount += post.likes.size;
+        });
+
+        console.log("Likes: " + likesCount);
       } else if (req._parsedUrl.pathname === "/news") {
         console.log("News");
         posts = await Post.find({ rubric: "Новини" })
@@ -64,7 +72,7 @@ class PostController {
       res.header("Access-Control-Expose-Headers", "X-Total-Count");
       res.header("X-Total-Count", totalCount);
 
-      res.status(200).json(posts);
+      res.status(200).json({ posts, likesCount });
     } catch (err) {
       res.status(404).json({ message: err.message });
     }
