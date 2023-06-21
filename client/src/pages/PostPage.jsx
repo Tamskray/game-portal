@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useHttpClient } from "../hooks/http-hook";
 
@@ -7,12 +7,6 @@ import PostCreator from "../components/posts/PostCreator";
 import PostLike from "../components/posts/PostLike";
 import PostComments from "../components/posts/PostComments";
 
-import { convertToRaw, EditorState, ContentState } from "draft-js";
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
-// import "draft-js/dist/Draft.css";
-// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
 import cl from "../styles/PostPage.module.css";
 
 const PostPage = () => {
@@ -20,29 +14,13 @@ const PostPage = () => {
   const [loadedPost, setLoadedPost] = useState();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
-  // const [editorState, setEditorState] = useState(() =>
-  //   EditorState.createEmpty()
-  // );
-
-  // const [contentState, setContentState] = useState();
-  // let raw;
-
   useEffect(() => {
     const fetchPost = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/posts/${params.postId}`
+          `${process.env.REACT_APP_API_URL}/posts/${params.postId}`
         );
         setLoadedPost(responseData);
-        // console.log(responseData.content);
-
-        // const contentBlock = htmlToDraft(responseData.content);
-        // const contentState = ContentState.createFromBlockArray(
-        //   contentBlock.contentBlocks
-        // );
-        // const editorState = EditorState.createWithContent(contentState);
-
-        // setEditorState(editorState);
       } catch (err) {
         console.log(err);
       }
@@ -62,7 +40,7 @@ const PostPage = () => {
                 className={cl.post__image}
                 src={
                   loadedPost.image &&
-                  "http://localhost:5000/" + loadedPost.image
+                  process.env.REACT_APP_URL + loadedPost.image
                 }
                 alt="postImage"
               />

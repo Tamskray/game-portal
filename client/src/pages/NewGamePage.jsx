@@ -66,9 +66,14 @@ const NewGamePage = () => {
       formData.append("date", releaseDate);
       formData.append("image", formState.inputs.image.value);
 
-      await sendRequest("http://localhost:5000/api/games", "POST", formData, {
-        Authorization: "Bearer " + auth.token,
-      });
+      await sendRequest(
+        `${process.env.REACT_APP_API_URL}/games`,
+        "POST",
+        formData,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
       navigate("/");
     } catch (err) {
       console.log(err);

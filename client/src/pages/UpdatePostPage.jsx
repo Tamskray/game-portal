@@ -57,7 +57,7 @@ const UpdatePostPage = () => {
     const fetchPost = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/posts/${params.postId}`
+          `${process.env.REACT_APP_API_URL}/posts/${params.postId}`
         );
         setLoadedPost(responseData);
         setFormData(
@@ -116,7 +116,7 @@ const UpdatePostPage = () => {
       formData.append("image", formState.inputs.image.value);
 
       await sendRequest(
-        `http://localhost:5000/api/posts/${params.postId}`,
+        `${process.env.REACT_APP_API_URL}/posts/${params.postId}`,
         "PATCH",
         formData,
         { Authorization: "Bearer " + auth.token }
@@ -190,19 +190,6 @@ const UpdatePostPage = () => {
           initialValue={formState.inputs.description.value}
           initialValid={true}
         />
-        {/* <Input
-          id="content"
-          element="textarea"
-          type="text"
-          label="Контент"
-          placeholder="Творіть.."
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Заповніть поле"
-          onInput={inputHandler}
-          initialValue={formState.inputs.content.value}
-          initialValid={true}
-        /> */}
-
         <div>Контент</div>
 
         <ImageUpload
@@ -211,7 +198,7 @@ const UpdatePostPage = () => {
           onInput={inputHandler}
           errorText="Оберіть зображення"
           imageUrl={
-            loadedPost.image && "http://localhost:5000/" + loadedPost.image
+            loadedPost.image && process.env.REACT_APP_URL + loadedPost.image
           }
           width="400px"
         />

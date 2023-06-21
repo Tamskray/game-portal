@@ -18,4 +18,6 @@ router.use(checkAuth);
 router.post("/", fileUpload.single("image"), GamesController.createGame);
 router.patch("/:gid", fileUpload.single("image"), GamesController.updateGame);
 
+router.delete("/:gid", GamesController.deleteGame);
+
 export default router;

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { VscHeartFilled } from "react-icons/vsc";
 import Modal from "../UI/modal/Modal";
 import "./PostLike.css";
-import Button from "../UI/button/Button";
+import Button from "../UI/Button/Button";
 
 const PostLike = ({ likes, postId }) => {
   const auth = useContext(AuthContext);
@@ -19,7 +19,7 @@ const PostLike = ({ likes, postId }) => {
   const fetchLikes = async () => {
     try {
       auth.token &&
-        (await fetch(`http://localhost:5000/api/posts/${postId}/like`, {
+        (await fetch(`${process.env.REACT_APP_API_URL}/posts/${postId}/like`, {
           method: "PATCH",
           body: JSON.stringify({
             userId: auth.userId,

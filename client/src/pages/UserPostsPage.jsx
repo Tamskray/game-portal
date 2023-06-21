@@ -3,7 +3,7 @@ import PostList from "../components/posts/PostList";
 import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
 import { getPageCount, getPagesArray } from "../utils/pages";
 
-import Button from "../components/UI/button/Button";
+import Button from "../components/UI/Button/Button";
 import { useParams } from "react-router-dom";
 import Pagination from "../components/UI/pagination/Pagination";
 import Avatar from "../components/UI/avatar/Avatar";
@@ -97,7 +97,7 @@ const UserPostsPage = () => {
                   image={
                     loadedCreator.image
                       ? process.env.REACT_APP_URL + loadedCreator.image
-                      : "https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
+                      : "https://cdn-icons-png.flaticon.com/512/5397/5397197.png"
                   }
                   alt="img"
                   width="12rem"
@@ -123,6 +123,7 @@ const UserPostsPage = () => {
           <PostItemSkeleton itemsNumber={3} />
         </>
       )}
+
       {!isLoading && loadedPosts && <PostList items={loadedPosts} />}
       {pagesArray && pagesArray.length > 1 && (
         <Pagination

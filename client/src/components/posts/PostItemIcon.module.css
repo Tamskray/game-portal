@@ -1,0 +1,14 @@
+.modal__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close__icon {
+  cursor: pointer;
+}
+
+.close__icon:hover {
+  opacity: 50%;
+}

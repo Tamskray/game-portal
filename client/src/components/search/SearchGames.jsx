@@ -13,7 +13,7 @@ const SearchGames = ({ closeModal }) => {
     setIsLoading(true);
 
     const response = await fetch(
-      `http://localhost:5000/api/games/search?q=${searchValue}`
+      `${process.env.REACT_APP_API_URL}/games/search?q=${searchValue}`
     );
 
     const responseData = await response.json();
@@ -50,7 +50,7 @@ const SearchGames = ({ closeModal }) => {
           >
             <div className={cl.search__game__image}>
               <img
-                src={"http://localhost:5000/" + game.image}
+                src={process.env.REACT_APP_URL + game.image}
                 alt={game.title}
               />
             </div>

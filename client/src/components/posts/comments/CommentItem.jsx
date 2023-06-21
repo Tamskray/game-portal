@@ -28,7 +28,7 @@ const CommentItem = ({
     const fetchCommentCreator = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/users/${creatorId}`
+          `${process.env.REACT_APP_API_URL}/users/${creatorId}`
         );
 
         // console.log(responseData);
@@ -61,7 +61,7 @@ const CommentItem = ({
   const confirmDeleteHandler = async () => {
     try {
       await sendRequest(
-        `http://localhost:5000/api/comments/${commentId}`,
+        `${process.env.REACT_APP_API_URL}/comments/${commentId}`,
         "DELETE",
         null,
         { Authorization: "Bearer " + auth.token }
@@ -80,8 +80,8 @@ const CommentItem = ({
           <Avatar
             image={
               loadedCommentCreator && loadedCommentCreator.image
-                ? "http://localhost:5000/" + loadedCommentCreator.image
-                : "https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
+                ? process.env.REACT_APP_URL + loadedCommentCreator.image
+                : "https://cdn-icons-png.flaticon.com/512/5397/5397197.png"
             }
             alt={loadedCommentCreator && loadedCommentCreator.username}
           />
@@ -92,7 +92,10 @@ const CommentItem = ({
           )}
         </div>
         {activity && (
-          <div className="comment__activity" onClick={() => navigate(`/posts/${postId}`)}>
+          <div
+            className="comment__activity"
+            onClick={() => navigate(`/posts/${postId}`)}
+          >
             Перейти до поста
           </div>
         )}

@@ -121,9 +121,6 @@ class UserController {
           }
         });
       }
-      return res
-        .status(422)
-        .json({ message: "User exists already, email already exists" });
     }
 
     let hashedPassword;
@@ -161,18 +158,6 @@ class UserController {
     }
 
     const token = generateAccessToken(newUser.id, newUser.email, newUser.roles);
-    // let token;
-    // try {
-    //   token = Jwt.sign(
-    //     { userId: newUser.id, email: newUser.email, role: newUser.roles },
-    //     process.env.JWT_KEY,
-    //     { expiresIn: "1h" }
-    //   );
-    // } catch (err) {
-    //   return res
-    //     .status(500)
-    //     .json({ message: "Signing up failed, please try again later", err });
-    // }
 
     res.status(201).json({
       userId: newUser.id,
@@ -293,6 +278,88 @@ class UserController {
     }
 
     res.status(200).json({ message: "User deleted successfully" });
+  }
+
+  // UPDATE USER PROFILE
+  async updateUserProfile(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      return res.status(422).json({
+        message: "Invalid inputs passed, please check your data",
+        errors,
+      });
+    }
+    const { username, email } = req.body;
+    const userId = req.params.uid;
+
+    let existingUser;
+    try {
+      existingUser = await User.findById(userId);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong, could not find a user", err });
+    }
+
+    if (existingUser._id.toString() !== req.userData.userId) {
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to edit this user profile" });
+    }
+
+    let existingUserWithNewEmail;
+    try {
+      existingUserWithNewEmail = await User.findOne({ email: email });
+    } catch (err) {
+      return res.status(500).json({
+        message:
+          "Something went wrong, could not check the uniqueness of the entered email",
+        err,
+      });
+    }
+
+    if (
+      existingUserWithNewEmail &&
+      existingUserWithNewEmail._id.toString() !== userId
+    ) {
+      return res.status(409).json({
+        message: "Введена пошта вже використовується.",
+      });
+    }
+
+    if (req.file) {
+      existingUser.image &&
+        fs.unlink(existingUser.image, (err) => {
+          if (err) {
+            console.error("Failed to delete image:", err);
+          }
+        });
+    }
+
+    let imagePath;
+    if (req.file) {
+      imagePath = req.file.path;
+    } else {
+      imagePath = existingUser.image;
+    }
+
+    existingUser.username = username;
+    existingUser.email = email;
+    existingUser.image = imagePath;
+
+    console.log(existingUser);
+
+    try {
+      await existingUser.save();
+    } catch (err) {
+      return res.status(500).json({
+        message: "Something went wrong, could not update a user profile",
+        err,
+      });
+    }
+
+    res.status(200).json(existingUser);
   }
 }
 

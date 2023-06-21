@@ -8,7 +8,7 @@ const GamePosts = ({ postTitle }) => {
 
   const searchPosts = async () => {
     const response = await fetch(
-      `http://localhost:5000/api/posts/search?q=${postTitle}`
+      `${process.env.REACT_APP_API_URL}/posts/search?q=${postTitle}`
     );
 
     const responseData = await response.json();

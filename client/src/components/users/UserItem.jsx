@@ -128,7 +128,7 @@ const UserItem = ({ id, username, email, roles, image, updateUserList }) => {
             image={
               image
                 ? process.env.REACT_APP_URL + image
-                : "https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
+                : "https://cdn-icons-png.flaticon.com/512/5397/5397197.png"
             }
             alt={username}
             width="3rem"

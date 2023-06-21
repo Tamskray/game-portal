@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import Comment from "../models/Comment.js";
 
 class PostController {
   async getPosts(req, res, next) {
@@ -166,21 +167,16 @@ class PostController {
           },
         ]);
 
-        // console.log(posts);
-
         if (
           posts.length === 0 &&
           searchQuery !== undefined &&
           searchQuery.length > 2
         ) {
-          // posts = [{ _id: 1, title: "Нічого не знайдено" }];
           posts = "Нічого не знайдено";
         }
       } else {
-        // posts = [{ _id: 1, title: "" }];
         posts = "";
       }
-      // const posts = await Post.find({ title: { $search: searchQuery } });
       res.json(posts);
     } catch (error) {
       res.status(500).json({ error: "Error with searching posts" });
@@ -354,7 +350,7 @@ class PostController {
   }
 
   // DELETE
-  async deletePost(req, res, next) {
+  async deletePost(req, res) {
     const postId = req.params.pid;
 
     let post;
@@ -367,16 +363,26 @@ class PostController {
           .json({ message: "Could not find post for this id" });
       }
 
+      await Comment.deleteMany({ postId: postId });
+
+      console.log("asdsad " + post.creator);
+      await User.findByIdAndUpdate(post.creator, { $pull: { posts: postId } });
+
+      post.image &&
+        fs.unlink(post.image, (err) => {
+          if (err) {
+            console.error("Failed to delete image:", err);
+          }
+        });
+
       post = await Post.findByIdAndDelete(postId);
 
-      await User.findByIdAndUpdate(post.creator, { $pull: { posts: postId } });
+      res.status(200).json({ message: "Post deleted succesfully" });
     } catch (err) {
       return res
         .status(500)
         .json({ message: "Something went wrong, could not find a post" });
     }
-
-    res.status(200).json({ message: "Post deleted successfully" });
   }
 }
 

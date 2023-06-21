@@ -211,6 +211,30 @@ class GamesController {
 
     res.status(200).json(game);
   }
+
+  async deleteGame(req, res) {
+    try {
+      const gameId = req.params.gid;
+      const game = await Game.findById(gameId);
+
+      if (!game) {
+        return res
+          .status(404)
+          .json({ message: "Could not find game for this id" });
+      }
+
+      game.image &&
+        fs.unlink(game.image, (err) => {
+          if (err) {
+            console.error("Failed to delete image:", err);
+          }
+        });
+
+      game = await Game.findByIdAndDelete(gameId);
+
+      res.status(200).json({ message: "Game deleted succesfully" });
+    } catch (err) {}
+  }
 }
 
 export default new GamesController();

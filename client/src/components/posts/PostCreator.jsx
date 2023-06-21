@@ -34,7 +34,7 @@ const PostCreator = ({ creatorId, date, avatarWidth, avatarHeight }) => {
     const fetchCreator = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/users/${creatorId}`
+          `${process.env.REACT_APP_API_URL}/users/${creatorId}`
         );
         setLoadedCreator(responseData);
       } catch (err) {
@@ -54,7 +54,11 @@ const PostCreator = ({ creatorId, date, avatarWidth, avatarHeight }) => {
             onClick={() => navigate(`/${creatorId}/posts`)}
           >
             <Avatar
-              image="https://wallpapers.com/images/hd/anime-profile-picture-jioug7q8n43yhlwn.jpg"
+              image={
+                loadedCreator.image && loadedCreator.image
+                  ? process.env.REACT_APP_URL + loadedCreator.image
+                  : "https://cdn-icons-png.flaticon.com/512/5397/5397197.png"
+              }
               alt={loadedCreator.username}
               width={avatarWidth}
               height={avatarHeight}

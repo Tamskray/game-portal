@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 import PostList from "../components/posts/PostList";
 import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
-import Button from "../components/UI/button/Button";
 
 import Carousel from "nuka-carousel";
 import {
@@ -31,7 +30,7 @@ const HomePage = () => {
   const fetchPopularPosts = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/posts/popular-posts`
+        `${process.env.REACT_APP_API_URL}/posts/popular-posts`
       );
 
       const responseData = await response.json();
@@ -47,7 +46,7 @@ const HomePage = () => {
       setIsLoading(true);
 
       const response = await fetch(
-        `http://localhost:5000/api/posts?limit=${limit}&page=${page}`
+        `${process.env.REACT_APP_API_URL}/posts?limit=${limit}&page=${page}`
       );
 
       const responseData = await response.json();
@@ -107,7 +106,7 @@ const HomePage = () => {
                   <img
                     src={
                       post.image
-                        ? "http://localhost:5000/" + post.image
+                        ? process.env.REACT_APP_URL + post.image
                         : "https://i.pinimg.com/originals/17/48/d3/1748d39b9700b650bdd127078b1a02ea.png"
                     }
                     alt={post.title}

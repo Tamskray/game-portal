@@ -41,7 +41,7 @@ const PostComments = ({ postId, comments }) => {
   const fetchAllComments = async (limit = 0, page = 0) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/comments/post/${postId}?limit=${limit}&page=${page}`
+        `${process.env.REACT_APP_API_URL}/comments/post/${postId}?limit=${limit}&page=${page}`
       );
       const responseData = await response.json();
 
@@ -63,12 +63,8 @@ const PostComments = ({ postId, comments }) => {
 
   const fetchComments = useCallback(async (limit = 2, page = 0) => {
     try {
-      // const responseData1 = await sendRequest(
-      //   `http://localhost:5000/api/comments/post/${postId}?limit=${limit}&page=${page}`
-      // );
-
       const response = await fetch(
-        `http://localhost:5000/api/comments/post/${postId}?limit=${limit}&page=${page}`
+        `${process.env.REACT_APP_API_URL}/comments/post/${postId}?limit=${limit}&page=${page}`
       );
 
       const responseData = await response.json();
@@ -102,7 +98,7 @@ const PostComments = ({ postId, comments }) => {
   const commentSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-      await fetch(`http://localhost:5000/api/comments`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/comments`, {
         method: "POST",
         body: JSON.stringify({
           content: formState.inputs.content.value,

@@ -43,6 +43,20 @@ router.post(
 
 router.post("/login", UserController.login);
 
+router.patch(
+  "/update-profile/:uid",
+  checkAuth,
+  fileUpload.single("image"),
+  [
+    check("username", "Username must be from 3 to 18 characters").isLength({
+      min: 3,
+      max: 24,
+    }),
+    check("email", "Email is not valid").normalizeEmail().isEmail(),
+  ],
+  UserController.updateUserProfile
+);
+
 router.patch("/role/:uid", UserController.changeUserRole);
 
 router.delete("/:uid", UserController.deleteUser);

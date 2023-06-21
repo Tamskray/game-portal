@@ -12,10 +12,8 @@ import ImageUpload from "../components/image-upload/ImageUpload";
 import { convertToRaw, EditorState, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
 import "draft-js/dist/Draft.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { RiH2 } from "react-icons/ri";
 
 const NewPostPage = () => {
   const auth = useContext(AuthContext);
@@ -64,9 +62,14 @@ const NewPostPage = () => {
       );
       formData.append("image", formState.inputs.image.value);
 
-      await sendRequest("http://localhost:5000/api/posts", "POST", formData, {
-        Authorization: "Bearer " + auth.token,
-      });
+      await sendRequest(
+        `${process.env.REACT_APP_API_URL}/posts`,
+        "POST",
+        formData,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
+      );
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -134,16 +137,7 @@ const NewPostPage = () => {
           //   options: ["inline"],
           // }}
         />
-        {/* <Input
-          id="content"
-          element="textarea"
-          type="text"
-          label="Контент"
-          placeholder="Творіть.."
-          validators={[VALIDATOR_REQUIRE()]}
-          errorText="Заповніть поле"
-          onInput={inputHandler}
-        /> */}
+
         <Button
           label="Створити пост"
           type="submit"

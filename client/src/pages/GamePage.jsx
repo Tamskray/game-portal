@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Carousel from "nuka-carousel";
 import LoadingSpinner from "../components/UI/loadingSpinner/LoadingSpinner";
@@ -22,7 +22,7 @@ const GamePage = () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `http://localhost:5000/api/games/${params.gameId}`
+        `${process.env.REACT_APP_API_URL}/games/${params.gameId}`
       );
 
       const responseData = await response.json();
@@ -49,36 +49,40 @@ const GamePage = () => {
       {isLoading && <LoadingSpinner />}
       {!isLoading && loadedGame && (
         <>
-          <div className={cl.header__image}>
-            <img
-              src={
-                loadedGame?.steamGameDetailInfo[loadedGame.steamAppId].data
-                  .background_raw
-              }
-            />
-          </div>
+          {loadedGame.steamGameDetailInfo && (
+            <div className={cl.header__image}>
+              <img
+                src={
+                  loadedGame?.steamGameDetailInfo[loadedGame.steamAppId].data
+                    .background_raw
+                }
+              />
+            </div>
+          )}
 
           <GameInfo cl={cl} loadedGame={loadedGame} />
 
-          <div className={cl.game__carousel}>
-            <Carousel
-              wrapAround
-              autoplay
-              autoplayInterval={5000}
-              renderCenterLeftControls={renderCenterLeftControls}
-              renderCenterRightControls={renderCenterRightControls}
-            >
-              {loadedGame?.steamGameDetailInfo[
-                loadedGame.steamAppId
-              ].data.screenshots.map((item) => (
-                <div key={item.id}>
-                  <img src={item.path_full} />
-                </div>
-              ))}
-            </Carousel>
-          </div>
+          {loadedGame.steamGameDetailInfo && (
+            <div className={cl.game__carousel}>
+              <Carousel
+                wrapAround
+                autoplay
+                autoplayInterval={5000}
+                renderCenterLeftControls={renderCenterLeftControls}
+                renderCenterRightControls={renderCenterRightControls}
+              >
+                {loadedGame?.steamGameDetailInfo[
+                  loadedGame.steamAppId
+                ].data.screenshots.map((item) => (
+                  <div key={item.id}>
+                    <img src={item.path_full} />
+                  </div>
+                ))}
+              </Carousel>
+            </div>
+          )}
 
-          {loadedGame.achievements && (
+          {loadedGame.achievements.game.availableGameStats && (
             <GameAchievements cl={cl} loadedGame={loadedGame} />
           )}
 

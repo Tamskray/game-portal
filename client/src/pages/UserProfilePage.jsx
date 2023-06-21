@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { AuthContext } from "../context/auth-context";
 
 import { getPageCount, getPagesArray } from "../utils/pages";
@@ -66,6 +66,11 @@ const UserProfilePage = () => {
     auth.token && fetchUser(limit, page);
   }, [auth.token]);
 
+  const refreshUserProfileInfoHandler = useCallback(() => {
+    auth.token && fetchUser(limit, page);
+    console.log("Profile info updated");
+  }, []);
+
   const changePageHandler = (page) => {
     setPage(page);
     console.log("Page " + page);
@@ -94,6 +99,7 @@ const UserProfilePage = () => {
             <UpdateUserProfile
               user={loadedUser}
               closeModal={closeUpdateUserModalHandler}
+              refreshInfo={refreshUserProfileInfoHandler}
             />
           </Modal>
           <div>
@@ -105,7 +111,7 @@ const UserProfilePage = () => {
                       image={
                         loadedUser.image && loadedUser.image
                           ? process.env.REACT_APP_URL + loadedUser.image
-                          : "https://external-preview.redd.it/s40RczXEeh8Q0z6sc-u8cFFCpYdoUsjOpY9-Z-CDjms.jpg?auto=webp&s=7b5c42fc8df7cb5730705fd3e70a65f51750056e"
+                          : "https://cdn-icons-png.flaticon.com/512/5397/5397197.png"
                       }
                       alt={loadedUser.username}
                     />

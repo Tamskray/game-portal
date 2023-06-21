@@ -57,7 +57,7 @@ const UpdateGamePage = () => {
     const fetchGame = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/games/${params.gameId}`
+          `${process.env.REACT_APP_API_URL}/games/${params.gameId}`
         );
         setLoadedGame(responseData.game);
         setFormData(
@@ -115,7 +115,7 @@ const UpdateGamePage = () => {
       formData.append("image", formState.inputs.image.value);
 
       await sendRequest(
-        `http://localhost:5000/api/games/${params.gameId}`,
+        `${process.env.REACT_APP_API_URL}/games/${params.gameId}`,
         "PATCH",
         formData,
         { Authorization: "Bearer " + auth.token }
@@ -216,7 +216,7 @@ const UpdateGamePage = () => {
           width="250px"
           height="320px"
           imageUrl={
-            loadedGame.image && "http://localhost:5000/" + loadedGame.image
+            loadedGame.image && process.env.REACT_APP_URL + loadedGame.image
           }
         />
 
