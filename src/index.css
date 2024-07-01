@@ -61,6 +61,16 @@ footer {
   margin-top: 5rem;
 }
 
+ul {
+  padding-left: 0;
+}
+
+li {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
 .place-form {
   position: flex;
   list-style: none;

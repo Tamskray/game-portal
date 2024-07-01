@@ -1,7 +1,11 @@
 import React from "react";
-import { Likes } from "../../../types";
-import { monthNames } from "./constants";
-import PostAuthor from "./PostAuthor";
+
+import { Likes } from "../../../../types";
+
+import { monthNames } from "../constants";
+
+import PostAuthor from "../PostAuthor/PostAuthor";
+
 import { VscHeartFilled } from "react-icons/vsc";
 import { BiCommentDetail } from "react-icons/bi";
 
@@ -26,16 +30,16 @@ const PostDetails = ({
   }, ${postDate.getFullYear()}`;
 
   return (
-    <div className="post__footer">
+    <div className="post__details">
       <PostAuthor creator={creator} />
 
-      <span>{publishedDate}</span>
+      <time dateTime={date}>{publishedDate}</time>
 
-      <div className="post__icons">
+      <div className="post__icons" aria-label="likes count">
         <VscHeartFilled />
         <span>{likeCount}</span>
       </div>
-      <div className="post__icons">
+      <div className="post__icons" aria-label="comments count">
         <BiCommentDetail />
         <span>{comments.length}</span>
       </div>

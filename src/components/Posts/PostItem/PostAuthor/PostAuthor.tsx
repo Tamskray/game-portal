@@ -1,9 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { defaultAvatarImage } from "./constants";
-import useRequest from "../../../hooks/useRequest";
-import { PostCreator } from "../../../types";
-import Avatar from "../../UI/Avatar/Avatar";
+import useRequest from "../../../../hooks/useRequest";
+
+import { PostCreator } from "../../../../types";
+
+import { defaultAvatarImage } from "../constants";
+
+import Avatar from "../../../UI/Avatar/Avatar";
 // import Loading from "../../UI/Loading/Loading";
 
 interface Props {
@@ -36,6 +39,7 @@ const PostAuthor = ({ creator }: Props): React.ReactElement => {
   return (
     <div
       className="post__creator"
+      aria-label="post creator"
       onClick={() => navigate(`/${postCreator?.userId}/posts`)}
     >
       <Avatar

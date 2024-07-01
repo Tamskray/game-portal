@@ -1,7 +1,8 @@
 import React from "react";
-import { Post } from "../../../types";
 
-import PostItem from "../PostItem/PostItem";
+import { Post } from "../../../../types";
+
+import PostItem from "../../PostItem/PostItem/PostItem";
 
 interface Props {
   posts: Post[] | undefined;
@@ -9,6 +10,10 @@ interface Props {
 }
 
 const PostsList = ({ posts }: Props): React.ReactElement => {
+  if (posts?.length === 0) {
+    return <div>No posts</div>;
+  }
+
   return (
     <ul>
       {posts?.map((post) => (

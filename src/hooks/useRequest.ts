@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 
 const useRequest = <T>(
   config: AxiosRequestConfig<any>
-): [T | undefined, boolean, string] => {
+): [T | undefined, boolean, string, () => void] => {
   const [data, setData] = useState<T>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -11,6 +11,10 @@ const useRequest = <T>(
   useEffect(() => {
     sendRequest();
   }, []);
+
+  const request = () => {
+    sendRequest();
+  };
 
   const sendRequest = () => {
     setIsLoading(true);
@@ -26,7 +30,7 @@ const useRequest = <T>(
       .finally(() => setIsLoading(false));
   };
 
-  return [data, isLoading, error];
+  return [data, isLoading, error, request];
 };
 
 export default useRequest;

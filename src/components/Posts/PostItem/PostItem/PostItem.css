@@ -41,7 +41,7 @@ hr {
 
 .post__title {
   font-size: 22px;
-  padding: 5px 0 5px 0;
+  /* padding: 5px 0 5px 0; */
 }
 
 .post__title:hover {
@@ -62,7 +62,7 @@ hr {
   font-size: 16px;
 }
 
-.post__footer {
+.post__details {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -89,7 +89,7 @@ hr {
   margin-left: 3px;
 }
 
-.post__footer img {
+.post__details img {
   min-width: 1rem;
   min-height: 1rem;
   width: 1rem;
@@ -109,13 +109,13 @@ hr {
     margin-top: 10px;
   }
 
-  .post__footer {
+  .post__details {
     max-width: 540px;
   }
 }
 
 @media (max-width: 500px) {
-  .post__footer {
+  .post__details {
     max-width: 450px;
     min-width: 280px;
     flex-wrap: wrap;

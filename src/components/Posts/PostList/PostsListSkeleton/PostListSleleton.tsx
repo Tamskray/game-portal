@@ -10,7 +10,7 @@ const PostListSleleton = ({ itemsNumber }: Props): React.ReactElement => {
   const skeletonPosts = [];
   for (let i = 0; i < itemsNumber; i++) {
     skeletonPosts.push(
-      <div key={i} className={cl.skeleton__container}>
+      <div key={i} className={cl.skeleton__item}>
         <div className={cl.skeleton__content}>
           <div className={cl.skeleton__content__image}></div>
           <div>
@@ -24,7 +24,7 @@ const PostListSleleton = ({ itemsNumber }: Props): React.ReactElement => {
     );
   }
 
-  return <>{skeletonPosts}</>;
+  return <div className={cl.skeleton__container}>{skeletonPosts}</div>;
 };
 
 export default PostListSleleton;
