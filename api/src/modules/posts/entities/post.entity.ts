@@ -5,37 +5,37 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ length: 255 })
   title: string;
 
-  @Column({ nullable: true })
+  @Column({ length: 255 })
   url: string;
 
-  @Column({ nullable: true })
+  @Column({ length: 255 })
   category: string;
 
-  @Column({ nullable: true })
+  @Column('text')
   description: string;
 
-  @Column({ nullable: true })
+  @Column('text')
   content: string;
 
-  @Column({ nullable: true })
-  date: string;
+  @Column('timestamp')
+  date: Date;
 
   // TODO: Save not only the path
-  @Column({ nullable: true })
+  @Column({ length: 255 })
   image: string;
 
   // TODO: One to many
-  @Column({ nullable: true })
+  @Column({ length: 255 })
   creator: string;
 
-  @Column({ type: 'jsonb' })
-  likes: Record<string, boolean>;
+  @Column('int')
+  likes: number;
 
   // TODO: relation
-  @Column({ type: 'text', array: true })
+  @Column('text', { array: true })
   comments: string[];
 
   // comment can be like ->
