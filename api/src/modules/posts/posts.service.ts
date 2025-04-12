@@ -17,7 +17,9 @@ export class PostsService {
   }
 
   findAll(): Promise<Post[]> {
-    return this.postsRepository.find();
+    return this.postsRepository.find({
+      relations: ['comments'],
+    });
   }
 
   findOne(id: number) {
